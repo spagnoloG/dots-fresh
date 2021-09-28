@@ -4,9 +4,9 @@ override<br />
     `stow --adopt -nvt ~ *`<br />
 Requirements: <br />
 <ul>
-    <l1>alacritty</li>
-    <l1>flameshot</li>
-    <l1>picom</li>
+    <li>alacritty</li>
+    <li>flameshot</li>
+    <li>picom</li>
     <li>firefox</li>
     <li>awesomewm(git version)</li>
 </ul>
