@@ -85,7 +85,7 @@ local function set_wallpaper(s)
     awful.spawn.with_shell("~/.fehbg", false)
 end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", set_wallpaper)
+--screen.connect_signal("property::geometry", set_wallpaper)
 
 local mytextclock = wibox.widget.textclock("%R")
 mytextclock:buttons(gears.table.join(awful.button({},1, function()
@@ -380,12 +380,12 @@ print(f'Hello in Python {python_version()} 🐍\nNumpy is imported already.')"
     --------------------------{ BRIGHTNESS }----------------------------------
     awful.key({ }, "XF86MonBrightnessUp",
         function()
-            awful.spawn("bash -c 'xbacklight -inc 10'", false)
+            awful.spawn("bash -c 'brightnessctl s +10%'", false)
         end, {description="Increase screen brightness", group="Brightness control"}),
 
     awful.key({ }, "XF86MonBrightnessDown",
         function()
-            awful.spawn("bash -c 'xbacklight -dec 10'", false)
+            awful.spawn("bash -c 'brightnessctl s 10%-'", false)
         end, {description="Decrease screen brightness", group="Brightness control"}),
 
     awful.key({ "Shift" }, "XF86MonBrightnessUp",
