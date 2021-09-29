@@ -48,8 +48,8 @@ settings.lock_command = "light-locker-command --lock"
 -- because it will be concatenated with number.
 settings.volume_commands = {
     GET_VOL_CMD = "amixer -D pulse sget Master",
-    SET_VOL_CMD = "pactl set-sink-volume @DEFAULT_SINK@",
-    TOG_VOL_CMD = "pactl @DEFAULT_SINK@ toggle",
+    SET_VOL_CMD = "amixer -D pulse sset Master ",
+    TOG_VOL_CMD = "amixer -D pulse sset Master toggle",
 }
 
 -- Change this command, if you use another player.
