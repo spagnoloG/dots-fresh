@@ -85,7 +85,7 @@ local function set_wallpaper(s)
     awful.spawn.with_shell("~/.fehbg", false)
 end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
---screen.connect_signal("property::geometry", set_wallpaper)
+screen.connect_signal("property::geometry", set_wallpaper)
 
 local mytextclock = wibox.widget.textclock("%R")
 mytextclock:buttons(gears.table.join(awful.button({},1, function()
@@ -290,7 +290,7 @@ print(f'Hello in Python {python_version()} 🐍\nNumpy is imported already.')"
         end, {description = "Python", group = "Applications"}),
 
     ----------------------{ AWESOME }--------------------------------------------
-    awful.key({ modkey }, "a",
+    awful.key({ modkey }, "p",
         function ()
             awful.spawn([[rofi -show drun -modi drun -show-icons -width 30 -lines 8 -kb-row-tab "Tab"]])
         end, {description = "Run rofi launcher", group = "Awesome"}),
@@ -428,7 +428,7 @@ print(f'Hello in Python {python_version()} 🐍\nNumpy is imported already.')"
         end, {description="Next track", group="Music player control"}),
 
     ----------------------{ TAGS }--------------------------------------------
-    awful.key({ modkey,}, "p", function() awful.tag.togglemfpol(t) end, {description = "Toggle master fill police", group = "Tag management"}),
+    awful.key({ modkey,}, "a", function() awful.tag.togglemfpol(t) end, {description = "Toggle master fill police", group = "Tag management"}),
 
     awful.key({ modkey,}, "`",     awful.tag.history.restore, {description = "Go to previous tag", group = "Tag management"}),
 
