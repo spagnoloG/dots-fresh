@@ -8,5 +8,7 @@ Requirements: <br />
     <li>flameshot</li>
     <li>picom</li>
     <li>firefox</li>
-    <li>awesomewm(git version)</li>
+    <li>i3</li>
+    <li>i3lock</li>
+    <li>brightnessctl</li>
 </ul>
