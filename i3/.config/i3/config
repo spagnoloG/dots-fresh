@@ -114,9 +114,9 @@ set $ws1 "1: browser"
 set $ws2 "2: term"
 set $ws3 "3: code"
 set $ws4 "4: study"
-set $ws5 "5: tools"
+set $ws5 "5: study"
 set $ws6 "6: misc"
-set $ws7 "7: h"
+set $ws7 "7: tools"
 set $ws8 "8: silent-voices"
 set $ws9 "9: communications"
 set $ws10 "10: music"
@@ -166,16 +166,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym j resize shrink width 5 px or 5 ppt
+        bindsym k resize grow height 5 px or 5 ppt
+        bindsym l resize shrink height 5 px or 5 ppt
+        bindsym semicolon resize grow width 5 px or 5 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -184,6 +184,9 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+# Remove tilte bars
+for_window [class="^.*"] border pixel 1
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -215,3 +218,4 @@ exec brave
 exec alacritty
 exec code
 exec_always feh --bg-scale /home/gasper/Pictures/wall/wallpaper.jpg
+
