@@ -11,4 +11,5 @@ Requirements: <br />
     <li>i3</li>
     <li>i3lock</li>
     <li>brightnessctl</li>
+    <li>vim</li>
 </ul>
