@@ -218,4 +218,7 @@ exec brave
 exec alacritty
 exec code
 exec_always feh --bg-scale /home/gasper/Pictures/wall/wallpaper.jpg
+exec clipit &
+## Enable gpu brt
+exec xrandr --setprovideroffloadsink 1 0
 
