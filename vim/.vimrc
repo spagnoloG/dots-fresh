@@ -4,8 +4,6 @@ set t_Co=16
 set nocompatible
 set showmode
 set showcmd
-set ruler
-set number
 set cursorline
 set expandtab
 set noshiftround
@@ -31,6 +29,14 @@ set statusline=%1*\ file\ %3*\ %f\ %4*\
 set statusline+=%=\ 
 set statusline+=%3*\ %l\ of\ %L\ %2*\ line\ 
 set scrolloff=8
+map <ESC>[1;5A <C-Up>
+map <ESC>[1;5B <C-Down>
+map <ESC>[1;5C <C-Right>
+map <ESC>[1;5D <C-Left>
+imap <ESC>[1;5A <C-Up>
+imap <ESC>[1;5B <C-Down>
+imap <ESC>[1;5C <C-Right>
+imap <ESC>[1;5D <C-Left>
 nmap <C-S> :w<CR>
 nmap <C-_> :noh<CR>
 nmap <S-Left> v<Left>
