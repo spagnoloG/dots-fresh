@@ -10,6 +10,9 @@ Requirements: <br />
     <li>firefox</li>
     <li>i3</li>
     <li>i3lock</li>
+    <li>noto-fonts-emoji</li>
+    <li>noto-fonts</li>
+    <li>ttf-iosevka</li>
     <li>brightnessctl</li>
     <li>vim</li>
 </ul>
