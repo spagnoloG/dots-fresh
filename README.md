@@ -9,3 +9,5 @@ Options:
     -s        Instal sec packages
     -d        Install dev packages
 ```
+## Screenshot
+![screenshot](./screenshots/screenshot.png)
