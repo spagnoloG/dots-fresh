@@ -76,7 +76,8 @@ Usage: sudo $program_name [-option]
 Options:
     --help    Print this message
     -i        Install base packages and dots
-    -s        Instal sus packages
+    -s        Instal sec packages
+    -d        Install dev packages
 EOF
 }
 
