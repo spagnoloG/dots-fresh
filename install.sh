@@ -25,7 +25,7 @@ SYSTEM_PACKAGES=(
     'zathura'
     'feh'
     'firefox'
-    'brave'
+    'brave-bin'
     'sway'
     'swaylock'
     'papirus-icon-theme'
@@ -103,8 +103,7 @@ function package_installer(){
 function configure_dots(){
     for conf in ${CONFIGS[@]};
     do
-        printf "$conf"
-        stow --adopt -nvt ~ "$conf"
+        stow -nvt ~ "$conf"
     done
     printf "${DOTS_INFO}"
 }
@@ -113,6 +112,7 @@ function install_paru(){
     if pacman -Qs paru > /dev/null ; then
         return 0
     fi
+    sudo pacman -S rust
     sudo -u "$SUDO_USER" -- sh -c "
     git clone https://aur.archlinux.org/paru.git
     cd paru || return;
