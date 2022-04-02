@@ -47,6 +47,8 @@ SEC_PACKAGES=(
     'net-tools'
     'whois'
     'binwalk'
+    'pdfgrep'
+    'pngcheck'
 )
 
 DEV_PACKAGES=(
