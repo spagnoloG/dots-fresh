@@ -34,6 +34,10 @@ SYSTEM_PACKAGES=(
     'kvantum'
     'ttf-iosevka'
     'stow'
+    'rsync'
+    'brightnessctl'
+    'transmission-gtk'
+    'flameshot'
 )
 #latex packgs
 
@@ -41,6 +45,7 @@ SEC_PACKAGES=(
     'ghidra'
     'nmap'
     'gdb'
+    'gdb-common'
     'proxychains'
     'tor'
     'sslscan'
@@ -49,6 +54,10 @@ SEC_PACKAGES=(
     'binwalk'
     'pdfgrep'
     'pngcheck'
+    'sleuthkit'
+    'metasploit'
+    'burpsuite'
+    'binwalk'
 )
 
 DEV_PACKAGES=(
