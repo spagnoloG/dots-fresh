@@ -28,7 +28,6 @@ SYSTEM_PACKAGES=(
     'brave-bin'
     'sway'
     'swaylock'
-    'papirus-icon-theme'
     'nerd-fonts-source-code-pro'
     'qt5ct'
     'kvantum'
@@ -38,6 +37,14 @@ SYSTEM_PACKAGES=(
     'brightnessctl'
     'transmission-gtk'
     'flameshot'
+    'tlp'
+    'texlive-most'
+    'tree'
+    'zathura-pdf-mupdf'
+    'matcha-gtk-theme'
+    'kvantum-theme-nordic-git'
+    'papirus-icon-theme'
+    'thunar'
 )
 #latex packgs
 
@@ -67,6 +74,7 @@ DEV_PACKAGES=(
     'yarn'
     'neovim'
     'visual-studio-code-bin'
+    'thunderbird'
 )
 
 CONFIGS=(
@@ -75,6 +83,7 @@ CONFIGS=(
     'waybar'
     'mako'
     'nvim'
+    'gtk-3.0'
 )
 
 DOTS_INFO="info[configure_dots] -> this function only checks if\n\t\t dots can be applied safely, if there are\n\t\t no error messages, remove -n parameter.\n"
