@@ -11,17 +11,18 @@ set shiftwidth=4            " width for autoindents
 set autoindent              " indent a new line the same amount as the line just typed
 set relativenumber          " add line numbers
 set wildmode=longest,list   " get bash-like tab completions
-filetype plugin indent on   "allow auto-indenting depending on file type
+filetype plugin indent on   " allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
-set clipboard+=unnamedplus   " using system clipboard
+set clipboard+=unnamedplus  " using system clipboard
 filetype plugin on
 set ttyfast                 " Speed up scrolling in Vim
 set spell                   " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 set backupdir=~/.cache/vim  " Directory to store backup files.
 let mapleader = ","
-" Plugins
+
+" ******************************* VIMPLUG ***********************************
 call plug#begin()
     " Appearance
     Plug 'vim-airline/vim-airline'
@@ -37,24 +38,39 @@ call plug#begin()
     " Completion / linters / formatters
     Plug 'plasticboy/vim-markdown'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
     " Git
     Plug 'airblade/vim-gitgutter'
-
-    "Latex
+    " Latex
     Plug 'lervag/vimtex'
-    "ctrlp
+    " Ctrlp
     Plug 'ctrlpvim/ctrlp.vim'
-    "Rust
+    " Rust
     Plug 'rust-lang/rust.vim'
 call plug#end()
+" ******************************* VIMPLUG ***********************************
 
-" setup airline
+" ******************************* THEMING ***********************************
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='deus'
+let g:airline_theme='gruvbox'
+set termguicolors
+colorscheme gruvbox
+filetype plugin indent on
+filetype plugin on
+" ******************************* THEMING ***********************************
+
 " setup nerdtree
 let NERDTreeShowHidden=1 " show hidden files
+
+" setup ctrlp
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
+" ******************************* VIMTEX ***********************************
+" This enables Vim's and neovim's syntax-related features. Without this, some
+" VimTeX features will not work (see ":help vimtex-requirements" for more
+" info).
+"syntax enable
+
 " setup vim markdown
 let g:tex_conceal = '' "disable math conceal?
 let g:vim_markdown_math = 1
@@ -62,20 +78,6 @@ let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_fenced_languages = ['tsx=typescriptreact']
-" setup ctrlp
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
-" setup theme
-set termguicolors
-colorscheme gruvbox
-
-filetype plugin indent on
-filetype plugin on
-
-" This enables Vim's and neovim's syntax-related features. Without this, some
-" VimTeX features will not work (see ":help vimtex-requirements" for more
-" info).
-"syntax enable
 
 " Viewer options: One may configure the viewer either by specifying a built-in
 " viewer method:
@@ -96,19 +98,21 @@ let g:vimtex_compiler_method = 'latexrun'
 " Most VimTeX mappings rely on localleader and this can be changed with the
 " following line. The default is usually fine and is the symbol "\".
 let maplocalleader = ","
+" ******************************* VIMTEX ***********************************
 
-" Normal mode remappings
+" ***************************** REMAPPINGS ***********************************
 nnoremap <C-q> :q!<CR>
 nnoremap <F4> :bd<CR>
-nnoremap <F5> :NERDTreeToggle<CR>
-"nnoremap <F6> :sp<CR>:terminal<CR>
-
+" elnerdo tree
+nnoremap <F5> :NERDTreeToggle<CR>   
 " Tabs
 nnoremap <S-Tab> :bnext<CR>
 nnoremap <silent> <S-t> :tabnew<CR>
-" disable arrow keys
+" disable arrow keys :)
 noremap <Up> <Nop>
 noremap <Down> <Nop>
 noremap <Left> <Nop>
 noremap <Right> <Nop>
+" ***************************** REMAPPINGS ***********************************
+
 source $HOME/.config/nvim/plug-config/coc.vim
