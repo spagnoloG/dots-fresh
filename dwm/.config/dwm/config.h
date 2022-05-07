@@ -1,6 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#include "gaplessgrid.c"
-
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
