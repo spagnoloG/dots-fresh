@@ -37,6 +37,16 @@ static const char *colors[][3]      = {
     //[SchemeTitle] = { title_fg,   title_bg,  norm_border },
 };
 
+static const char *const autostart[] = {
+	"wmname", "LG3D", NULL,
+	"slstatus", NULL,
+	"picom", NULL,
+	"hsetroot", "/home/gasper/pictures/wallpapers/RetroCar.jpg", NULL,
+	"kitty", "-e", "tmux", NULL,
+	NULL /* terminate */
+};
+
+
 /* tagging */
 //static const char *tags[] = {  "", "", "", "", "", "", "", "", "" };
 static const char *tags[] = {  "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
