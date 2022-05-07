@@ -11,25 +11,23 @@ set shiftwidth=4            " width for autoindents
 set autoindent              " indent a new line the same amount as the line just typed
 set relativenumber          " add line numbers
 set wildmode=longest,list   " get bash-like tab completions
-"set cc=80                  " set an 80 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
-set clipboard=unnamedplus   " using system clipboard
+set clipboard+=unnamedplus   " using system clipboard
 filetype plugin on
-"set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-" set spell                 " enable spell check (may need to download language package)
+set spell                   " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
-" set backupdir=~/.cache/vim " Directory to store backup files.
-
+set backupdir=~/.cache/vim  " Directory to store backup files.
+let mapleader = ","
 " Plugins
 call plug#begin()
     " Appearance
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'ryanoasis/vim-devicons'
-    Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+    Plug 'morhetz/gruvbox'
     " Utilities
     Plug 'sheerun/vim-polyglot'
     Plug 'jiangmiao/auto-pairs'
@@ -46,13 +44,15 @@ call plug#begin()
     "Latex
     Plug 'lervag/vimtex'
     "ctrlp
-    Plug 'ctrlpvim/ctrlp.vim'    
+    Plug 'ctrlpvim/ctrlp.vim'
+    "Rust
+    Plug 'rust-lang/rust.vim'
 call plug#end()
 
 " setup airline
-let g:airline_theme='material'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='deus'
 " setup nerdtree
 let NERDTreeShowHidden=1 " show hidden files
 " setup vim markdown
@@ -67,9 +67,8 @@ let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclu
 
 " setup theme
 set termguicolors
-let g:material_theme_style = 'palenight'
-colorscheme material
-" setup vimlatex
+colorscheme gruvbox
+
 filetype plugin indent on
 filetype plugin on
 
@@ -105,8 +104,11 @@ nnoremap <F5> :NERDTreeToggle<CR>
 "nnoremap <F6> :sp<CR>:terminal<CR>
 
 " Tabs
-nnoremap <S-Tab> :bprevious<CR>
-nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bnext<CR>
 nnoremap <silent> <S-t> :tabnew<CR>
-
+" disable arrow keys
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
 source $HOME/.config/nvim/plug-config/coc.vim
