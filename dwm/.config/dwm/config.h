@@ -1,40 +1,37 @@
 /* See LICENSE file for copyright and license details. */
-
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "iosevka:size=10", "fontawesome:size=10" };
-static const char dmenufont[]       = "iosevka:size=10";
-static const char col_gray1[]       = "#222222"; // background color
-static const char col_gray2[]       = "#444444"; // inactive window color
-static const char col_gray3[]       = "#bbbbbb"; // font color 
-static const char col_gray4[]       = "#eeeeee"; // current tag and window color
-static const char col_cyan[]        = "#000000"; // top bar second color
+static const char *fonts[]          = { "iosevka:size=11", "fontawesome:size=10" };
+static const char dmenufont[]       = "iosevka:size=11";
 static const char norm_fg[] = "#a89984";
 static const char norm_bg[] = "#282828";
 static const char norm_border[] = "#928374";
-
 static const char sel_fg[] = "#282828";
 static const char sel_bg[] = "#d65d0e";
 static const char sel_border[] = "#a89984";
-
 static const char urg_fg[] = "#a89984";
 static const char urg_bg[] = "#cc241d";
 static const char urg_border[] = "#b8bb26";
-
 static const char title_fg[] = "#b8bb26";
 static const char title_bg[] = "#3A3A3A";
-
 static const char col_borderbar[]   = "#75715e";
 
 static const char *colors[][3]      = {
     /*               fg           bg         border                         */
     [SchemeNorm] = { norm_fg,     norm_bg,   norm_border }, // unfocused wins
     [SchemeSel]  = { sel_fg,      sel_bg,    sel_border },  // the focused win
-    //[SchemeUrg] =  { urg_fg,      urg_bg,    urg_border },
-    //[SchemeTitle] = { title_fg,   title_bg,  norm_border },
+};
+
+static const char *const autostart[] = {
+	"wmname", "LG3D", NULL,
+	"slstatus", NULL,
+	"picom", NULL,
+	"hsetroot", "/home/gasper/pictures/wallpapers/RetroCar.jpg", NULL,
+	"kitty", "-e", "tmux", NULL,
+	NULL /* terminate */
 };
 
 /* tagging */
@@ -62,6 +59,8 @@ static const Layout layouts[] = {
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+	{ "[G]",	  gaplessgrid },
+	{ "[D]",	  deck },
 };
 
 /* key definitions */
@@ -85,7 +84,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", norm_bg, "-nf", norm_fg, "-sb", norm_border, "-sf", sel_fg, NULL };
 static const char *termcmd[]  = { "kitty", "-e", "tmux", NULL };
 static const char *lock_cmd[] = { "i3lock", "-c", "000000", NULL };
 static const char *sleep_cmd[] = {"systemctl", "suspend", "&&", "i3lock", "-c", "000000", NULL };
@@ -116,6 +115,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_g,      setlayout,      {.v = &layouts[3] } },
+	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[4] } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
