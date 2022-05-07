@@ -45,6 +45,8 @@ SYSTEM_PACKAGES=(
     'kvantum-theme-nordic-git'
     'papirus-icon-theme'
     'thunar'
+    'man-pages'
+    'man-db'
 )
 #latex packgs
 
@@ -65,6 +67,8 @@ SEC_PACKAGES=(
     'metasploit'
     'burpsuite'
     'binwalk'
+    'foremost'
+    'hash-identifier'
 )
 
 DEV_PACKAGES=(
