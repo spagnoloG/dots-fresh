@@ -110,7 +110,7 @@ function usage() {
 Usage: sudo $program_name [-option]
 Options:
     --help    Print this message
-    -i        Install base packages
+    -i        Install base packages (sudo perms needed)
     -s        Instal sec packages
     -d        Install dev packages
     -a        Apply dots
@@ -162,6 +162,11 @@ function main() {
             exit 0
             ;;
         -i)
+            # Check for root perms
+            if [ -z "$SUDO_USER" ]; then
+                usage
+                exit 1
+            fi
             printf "info -> installing paru pckg manager\n"
             install_paru
             printf "info -> installing sys packages\n"
@@ -185,10 +190,7 @@ function main() {
     esac
 }
 
-if [ -z "$SUDO_USER" ]; then
-    usage
-    exit 1
-fi
+[ -z "$@"] && usage
 
 # iterate through cli arguments
 for param in "$@"
