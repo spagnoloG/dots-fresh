@@ -55,6 +55,8 @@ SYSTEM_PACKAGES=(
     'thunar'
     'man-pages'
     'man-db'
+    'bluez'
+    'blueman-manager'
 )
 #latex packgs
 
@@ -96,6 +98,7 @@ CONFIGS=(
     'nvim'
     'gtk-3.0'
     'swaynag'
+    'wallpapers'
 )
 
 DOTS_INFO="info[configure_dots] -> this function only checks if\n\t\t dots can be applied safely, if there are\n\t\t no error messages, remove -n parameter.\n"
@@ -136,7 +139,7 @@ function package_installer(){
 function configure_dots(){
     for conf in ${CONFIGS[@]};
     do
-        stow -nvt ~ "$conf"
+        stow -vvvnt  ~ "$conf"
     done
     printf "${DOTS_INFO}"
 }
