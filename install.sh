@@ -57,6 +57,7 @@ SYSTEM_PACKAGES=(
     'man-db'
     'bluez'
     'blueman-manager'
+    'dmenu'
 )
 #latex packgs
 

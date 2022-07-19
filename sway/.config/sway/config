@@ -106,7 +106,7 @@ exec_always {
     bindsym $mod+Shift+c reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    bindsym $mod+Shift+e exec ~/.config/waybar/scripts/waybar-power.sh
 #
 # Moving around:
 #
@@ -234,7 +234,7 @@ bar {
 }
 
 # Lock screen
-bindsym $mod+shift+x exec swaylock \
+bindsym $mod+f1 exec swaylock \
 	--screenshots \
 	--indicator \
 	--clock \
@@ -250,9 +250,10 @@ bindsym $mod+shift+x exec swaylock \
 	--grace 2 \
 	--fade-in 0.2
 
-# Xrandr auto
-bindsym $mod+shift+z exec xrandr --auto
-# Flameshot -- screenshot tool
+# Leave
+bindsym $mod+shift+x exec ~/.config/waybar/scripts/waybar-power.sh
+
+# Take screenshot (Flameshot support on wayland plsss)
 bindsym Print exec grim -g "$(slurp)" - | swappy -f -
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec brightnessctl s +10% # increase screen brightness
@@ -267,8 +268,6 @@ bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
-# Run rofi window switchwer
-#bindsym $mod+x exec rofi -theme andrea -show window -show-icons // not working in wayland
 # Run file manager
 bindsym $mod+shift+f exec thunar
 # Run brave
@@ -279,9 +278,9 @@ bindsym $mod+shift+s exec spotify
 bindsym $mod+shift+m exec blueman-manager
 # run arandr
 bindsym $mod+shift+a exec wdisplays
-#### ##### ##### #####
 
 ## Startup
+
 # impoort env variables
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME
 # start polkit
