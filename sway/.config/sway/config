@@ -19,15 +19,12 @@ set $gnome-schema org.gnome.desktop.interface
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu bemenu-run -p ">>" -n -l 6 --fn "Noto Sans 14" --hf="#bf5151" --hb="#191818" --nb="#191818" --nf="#d2d2d2" --tb="#191818" --tf="#bf5151" --fb="#191818" --ff="#d2d2d2"
+set $menu wofi --hide-scroll | xargs swaymsg exec -- 
 
 #font pango:Iosevka 20
 exec_always setwall random ~/Pictures/wallpapers -c sway
-#output * bg /home/gasper/Pictures/wallpapers/wall.jpg fill
-default_border pixel 2
 
-## Display
-output DP-1 pos 0 0 res 3440x1440@100Hz
+default_border pixel 2
 
 ## Gaps
 gaps inner 2
@@ -36,13 +33,20 @@ smart_gaps on
 
 # colour of border, background, text, indicator, and child_border
 # Colors
-set $bg #191818
-set $bod_f #474343
-set $bod_u #191818
-set $text #d2d2d2
-client.focused   $bod_f $bg $text $bod_f $bod_f
-client.unfocused $bod_u $bg $text $bod_u $bod_u
-client.focused_inactive $bod_u $bg $text $bod_u $bod_u
+client.focused          #7aa2f7 #414868 #c0caf5 #7dcfff   #7aa2f7
+client.focused_inactive #7aa2f7 #414868 #c0caf5 #7dcfff   #7aa2f7
+client.unfocused        #414868 #24283b #a9b1d6 #7dcfff   #414868
+client.urgent           #e0af68 #e0af68 #1d202f #7dcfff   #e0af68
+
+# Window defaults
+for_window [class="Xsane" instance="xsane"] floating enable
+for_window [app_id="pavucontrol" ] floating enable, resize set width 40 ppt height 30 ppt
+for_window [class="qt5ct" instance="qt5ct"] floating enable, resize set width 60 ppt height 50 ppt
+for_window [class="Bluetooth-sendto" instance="bluetooth-sendto"] floating enable
+for_window [app_id="pamac-manager"] floating enable, resize set width 80 ppt height 70 ppt
+for_window [class="Lxappearance"] floating enable, resize set width 60 ppt height 50 ppt
+for_window [app_id="wdisplays" ] floating enable, resize set width 40 ppt height 60 ppt
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
@@ -51,26 +55,21 @@ client.focused_inactive $bod_u $bg $text $bod_u $bod_u
 # Example configuration:
 #
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
+output DP-1 pos 0 0 res 3440x1440@100Hz
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
 ### Idle configuration
-#
-# Example configuration:
-#
-#exec swayidle -w \
-#	timeout 300 'swaylock -f -c 000000' \
-#	timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-#
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
+exec swayidle -w \
+         timeout 600 'swaylock -f' \
+         timeout 1200 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f'
 
 ### Input configuration
 input "2:7:SynPS/2_Synaptics_TouchPad" {
        dwt enabled
        tap enabled
-       natural_scroll disabled
+       natural_scroll enabled
        middle_emulation enabled
        accel_profile "flat"
        pointer_accel 1.0
@@ -245,7 +244,22 @@ bar {
 }
 
 # Lock screen
-bindsym $mod+shift+x exec swaylock -f -c 000000
+bindsym $mod+shift+x exec swaylock \
+	--screenshots \
+	--indicator \
+	--clock \
+	--indicator-radius 100 \
+	--indicator-thickness 7 \
+	--effect-blur 7x5 \
+	--effect-vignette 0.5:0.5 \
+	--ring-color 24b362 \
+	--key-hl-color 1e90ff \
+	--line-color 00000000 \
+	--inside-color 00000088 \
+	--separator-color 00000000 \
+	--grace 2 \
+	--fade-in 0.2
+
 # Xrandr auto
 bindsym $mod+shift+z exec xrandr --auto
 # Flameshot -- screenshot tool
@@ -254,10 +268,10 @@ bindsym Print exec grim -g "$(slurp)" - | swappy -f -
 bindsym XF86MonBrightnessUp exec brightnessctl s +10% # increase screen brightness
 bindsym XF86MonBrightnessDown exec brightnessctl s 10%- # decrease screen brightness
 # Volume button controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle 
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
@@ -268,9 +282,9 @@ bindsym XF86AudioPrev exec playerctl previous
 # Run file manager
 bindsym $mod+shift+f exec thunar
 # Run brave
-bindsym $mod+shift+b exec brave --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+shift+b exec brave
 # Runs spotify
-bindsym $mod+shift+s exec spotify --enable-features=UseOzonePlatform --ozone-platform=wayland
+bindsym $mod+shift+s exec spotify
 # run blueman manager
 bindsym $mod+shift+m exec blueberry
 # run arandr
@@ -288,6 +302,7 @@ exec nm-applet --indicator
 exec wl-paste -t text --watch clipman store &
 # notification
 exec mako &
-
+# Displays setup
+exec kanshi
 
 include @sysconfdir@/sway/config.d/*

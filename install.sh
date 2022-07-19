@@ -27,7 +27,14 @@ SYSTEM_PACKAGES=(
     'firefox'
     'brave-bin'
     'sway'
-    'swaylock'
+    'swaylock-effects'
+    'xorg-xwayland'
+    'swaybg'
+    'swaynag'
+    'swappy'
+    'kanshi'
+    'catimg'
+    'wl-clipboard'
     'nerd-fonts-source-code-pro'
     'qt5ct'
     'kvantum'
@@ -44,6 +51,7 @@ SYSTEM_PACKAGES=(
     'matcha-gtk-theme'
     'kvantum-theme-nordic-git'
     'papirus-icon-theme'
+    'ttf-material-design-icons-extended'
     'thunar'
     'man-pages'
     'man-db'
@@ -63,9 +71,6 @@ SEC_PACKAGES=(
     'binwalk'
     'pdfgrep'
     'pngcheck'
-    'sleuthkit'
-    'metasploit'
-    'burpsuite'
     'binwalk'
     'foremost'
     'hash-identifier'
@@ -85,9 +90,12 @@ CONFIGS=(
     'kitty'
     'sway'
     'waybar'
+    'kanshi'
+    'cava'
     'mako'
     'nvim'
     'gtk-3.0'
+    'swaynag'
 )
 
 DOTS_INFO="info[configure_dots] -> this function only checks if\n\t\t dots can be applied safely, if there are\n\t\t no error messages, remove -n parameter.\n"
@@ -99,9 +107,10 @@ function usage() {
 Usage: sudo $program_name [-option]
 Options:
     --help    Print this message
-    -i        Install base packages and dots
+    -i        Install base packages
     -s        Instal sec packages
     -d        Install dev packages
+    -a        Apply dots
 EOF
 }
 
@@ -154,7 +163,6 @@ function main() {
             install_paru
             printf "info -> installing sys packages\n"
             package_installer "paru" "${SYSTEM_PACKAGES[@]}"
-            configure_dots
             ;;
         -s)
             printf "info -> installing sec packages\n"
@@ -163,6 +171,10 @@ function main() {
         -d)
             printf "info -> installing dev packages\n"
             package_installer "paru" "${DEV_PACKAGES[@]}"
+            ;;
+        -a)
+            printf "info -> Installing dots\n"
+            configure_dots
             ;;
         *)
             usage

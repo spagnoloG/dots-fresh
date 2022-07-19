@@ -1,0 +1,8 @@
+profile {
+	output "Dell Inc. DELL P2419HC H565L03" position 0,0
+	output eDP-1 disable
+}
+
+profile {
+	output eDP-1 enable
+}

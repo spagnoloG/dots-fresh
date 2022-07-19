@@ -7,5 +7,10 @@ text-color=#d2d2d2
 border-color=#474343
 border-radius=6
 
+default-timeout=10000
+
 height=700
 width=500
+
+[grouped]
+format=<b>%s</b>\n%b
