@@ -1,6 +1,6 @@
 {
     "position": "bottom", 
-    "height": 30,
+    "height": 10,
     "modules-left": ["sway/workspaces", "tray"],
     "modules-right": ["network", "pulseaudio", "battery", "backlight", "custom/date", "clock", "sway/language", "custom/power"],
     // Modules configuration

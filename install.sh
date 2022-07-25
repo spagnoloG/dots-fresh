@@ -58,6 +58,7 @@ SYSTEM_PACKAGES=(
     'bluez'
     'blueman-manager'
     'dmenu'
+    'xfce-polkit'
 )
 #latex packgs
 

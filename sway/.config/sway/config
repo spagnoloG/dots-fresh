@@ -20,6 +20,22 @@ set $gnome-schema org.gnome.desktop.interface
 # Your preferred application launcher
 set $menu wofi --hide-scroll | xargs swaymsg exec -- 
 
+set $swaylock_handler swaylock \
+	--screenshots \
+	--indicator \
+	--clock \
+	--indicator-radius 100 \
+	--indicator-thickness 7 \
+	--effect-blur 7x5 \
+	--effect-vignette 0.5:0.5 \
+	--ring-color 24b362 \
+	--key-hl-color 1e90ff \
+	--line-color 00000000 \
+	--inside-color 00000088 \
+	--separator-color 00000000 \
+	--grace 2 \
+	--fade-in 0.2
+
 #font pango:Iosevka 20
 exec_always setwall random ~/.wallpapers -c sway
 
@@ -51,9 +67,9 @@ for_window [app_id="blueman-manager" ] floating enable, resize set width 40 ppt 
 
 ### Idle configuration
 exec swayidle -w \
-         timeout 600 'swaylock -f' \
+         timeout 600 '$swaylock_handler' \
          timeout 1200 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f'
+        before-sleep '$swaylock_handler'
 
 ### Input configuration
 input "2:7:SynPS/2_Synaptics_TouchPad" {
@@ -234,30 +250,15 @@ bar {
 }
 
 # Lock screen
-bindsym $mod+f1 exec swaylock \
-	--screenshots \
-	--indicator \
-	--clock \
-	--indicator-radius 100 \
-	--indicator-thickness 7 \
-	--effect-blur 7x5 \
-	--effect-vignette 0.5:0.5 \
-	--ring-color 24b362 \
-	--key-hl-color 1e90ff \
-	--line-color 00000000 \
-	--inside-color 00000088 \
-	--separator-color 00000000 \
-	--grace 2 \
-	--fade-in 0.2
-
+bindsym $mod+f1 exec $swaylock_handler
 # Leave
 bindsym $mod+shift+x exec ~/.config/waybar/scripts/waybar-power.sh
 
 # Take screenshot (Flameshot support on wayland plsss)
 bindsym Print exec grim -g "$(slurp)" - | swappy -f -
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec brightnessctl s +10% # increase screen brightness
-bindsym XF86MonBrightnessDown exec brightnessctl s 10%- # decrease screen brightness
+bindsym XF86MonBrightnessUp exec brightnessctl s +5% && echo "Brightness: $( brightnessctl  | sed '1d;3d'  | awk '{ print $4}' ) "  | xargs notify-send 
+bindsym XF86MonBrightnessDown exec brightnessctl s 5%- && echo "Brightness: $( brightnessctl  | sed '1d;3d'  | awk '{ print $4}' ) "  | xargs notify-send
 # Volume button controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
