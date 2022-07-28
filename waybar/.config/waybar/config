@@ -1,7 +1,8 @@
 {
     "position": "bottom", 
+    "ipc": true,
     "height": 10,
-    "modules-left": ["sway/workspaces", "tray"],
+    "modules-left": ["sway/workspaces", "sway/mode", "tray"],
     "modules-right": ["network", "pulseaudio", "battery", "backlight", "custom/date", "clock", "sway/language", "custom/power"],
     // Modules configuration
 	"sway/workspaces": {

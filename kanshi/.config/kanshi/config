@@ -9,5 +9,5 @@ profile {
 
 profile {
 	output eDP-1 disable
-	output DP-1 position 0,0 mode 3440x1440@100Hz
+	output DP-1 position 0,0 mode 3440x1440@100Hz scale 1.10
 }
