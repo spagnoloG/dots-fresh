@@ -59,6 +59,7 @@ SYSTEM_PACKAGES=(
     'blueman-manager'
     'dmenu'
     'xfce-polkit'
+    'wmname'
 )
 #latex packgs
 
@@ -99,6 +100,7 @@ CONFIGS=(
     'mako'
     'nvim'
     'gtk-3.0'
+    'tmux'
     'swaynag'
     'wallpapers'
 )
