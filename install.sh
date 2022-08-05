@@ -60,11 +60,13 @@ SYSTEM_PACKAGES=(
     'dmenu'
     'xfce-polkit'
     'wmname'
+    'p7zip'
 )
 #latex packgs
 
 SEC_PACKAGES=(
     'ghidra'
+    'ida-free'
     'nmap'
     'gdb'
     'gdb-common'
@@ -79,6 +81,10 @@ SEC_PACKAGES=(
     'binwalk'
     'foremost'
     'hash-identifier'
+    'perl-image-exiftool'
+    'wireshark-qt'
+    'net-tools'
+    'zsteg'
 )
 
 DEV_PACKAGES=(
@@ -89,6 +95,7 @@ DEV_PACKAGES=(
     'neovim'
     'visual-studio-code-bin'
     'thunderbird'
+    'libreoffice-fresh'
 )
 
 CONFIGS=(
