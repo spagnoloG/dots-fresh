@@ -23,7 +23,7 @@ SYSTEM_PACKAGES=(
     'zsh-autosuggestions'
     'zsh-syntax-highlighting'
     'adobe-source-code-pro-fonts'
-    'kitty'
+    'alacritty'
     'zathura'
     'feh'
     'firefox'
@@ -112,7 +112,7 @@ DEV_PACKAGES=(
 )
 
 CONFIGS=(
-    'kitty'
+    'alacritty'
     'sway'
     'waybar'
     'kanshi'

@@ -184,8 +184,8 @@ exec_always {
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
-    bindsym $mod+w layout tabbed
+    bindsym $mod+Shift+s layout stacking
+    bindsym $mod+Shift+w layout tabbed
     bindsym $mod+e layout toggle split
 
     # Make the current focus fullscreen
@@ -262,9 +262,10 @@ bindsym Print exec grim -g "$(slurp)" - | swappy -f -
 bindsym XF86MonBrightnessUp exec brightnessctl s +5% && echo "Brightness: $( brightnessctl  | sed '1d;3d'  | awk '{ print $4}' ) "  | xargs notify-send 
 bindsym XF86MonBrightnessDown exec brightnessctl s 5%- && echo "Brightness: $( brightnessctl  | sed '1d;3d'  | awk '{ print $4}' ) "  | xargs notify-send
 # Volume button controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle 
+#  
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && echo "Volume: $( pactl list sinks | tr ' ' '\n' | grep -m1 '%' ) "  | xargs notify-send
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && echo "Volume: $( pactl list sinks | tr ' ' '\n' | grep -m1 '%' ) "  | xargs notify-send
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && echo "Volume: $( pactl list sinks | tr ' ' '\n' | grep -m1 '%' ) "  | xargs notify-send
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
@@ -275,14 +276,15 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym $mod+shift+f exec thunar
 # Run brave
 bindsym $mod+shift+b exec brave
-# Runs spotify
-bindsym $mod+shift+s exec spotify --enable-features=UseOzonePlatform --ozone-platform=wayland
 # run blueman manager
 bindsym $mod+shift+m exec blueman-manager
 # run arandr
 bindsym $mod+shift+a exec wdisplays
 # run clipboard history
 bindsym $mod+c exec clipman pick -t wofi 
+# window switcher
+bindsym $mod+w exec env RUST_BACKTRACE=1 \
+    swayr switch-window >> /tmp/swayr.log 2>&1
 
 ## Startup
 
@@ -292,6 +294,8 @@ exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_
 exec /usr/lib/xfce-polkit/xfce-polkit &
 exec wmname LG3D
 exec nm-applet --indicator
+# swayr
+exec env RUST_BACKTRACE=1 RUST_LOG=swayr=debug swayrd > /tmp/swayrd.log 2>&1
 # clipboard
 exec wl-paste -t text --watch clipman store
 # notification
