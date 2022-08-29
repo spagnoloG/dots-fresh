@@ -20,7 +20,7 @@ require('packer').startup(function(use)
   use 'williamboman/nvim-lsp-installer'                                           -- Automatically install language servers to stdpath
   use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }               -- Autocompletion
   use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } }           -- Snippet Engine and Snippet Expansion
-  use 'folke/tokyonight.nvim'                                                      -- Theme inspired by Atom
+  use 'Mofiqul/dracula.nvim'                                                      -- Theme inspired by Atom
   use 'nvim-lualine/lualine.nvim'                                                 -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim'                                       -- Add indentation guides even on blank lines
   use 'tpope/vim-sleuth'                                                          -- Detect tabstop and shiftwidth automatically
@@ -90,7 +90,7 @@ vim.wo.signcolumn = 'yes'
 
 -- Set colorscheme
 vim.o.termguicolors = true
-vim.cmd [[colorscheme tokyonight]]
+vim.cmd [[colorscheme dracula]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -126,7 +126,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('lualine').setup {
   options = {
     icons_enabled = false,
-    theme = 'tokyonight',
+    theme = 'dracula',
     component_separators = '|',
     section_separators = '',
   },

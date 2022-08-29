@@ -1,5 +1,5 @@
 {
-    "position": "bottom", 
+    "position": "top", 
     "ipc": true,
     "height": 10,
     "modules-left": ["sway/workspaces", "sway/mode", "tray"],

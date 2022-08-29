@@ -20,6 +20,8 @@ SYSTEM_PACKAGES=(
     'tmux'
     'usbguard'
     'zsh'
+    'zsh-autosuggestions'
+    'zsh-syntax-highlighting'
     'adobe-source-code-pro-fonts'
     'kitty'
     'zathura'
@@ -50,6 +52,7 @@ SYSTEM_PACKAGES=(
     'zathura-pdf-mupdf'
     'matcha-gtk-theme'
     'kvantum-theme-nordic-git'
+    'xcursor-breeze'
     'papirus-icon-theme'
     'ttf-material-design-icons-extended'
     'thunar'
@@ -85,6 +88,14 @@ SEC_PACKAGES=(
     'wireshark-qt'
     'net-tools'
     'zsteg'
+    'steghide'
+    'ghex'
+    'metasploit'
+    'bbe'
+    'avaloniailspy'
+    'ttf-ms-fonts'
+    'dirbuster-wordlists'
+    'subfinder-bin'
 )
 
 DEV_PACKAGES=(
@@ -96,6 +107,8 @@ DEV_PACKAGES=(
     'visual-studio-code-bin'
     'thunderbird'
     'libreoffice-fresh'
+    'dbeaver'
+    'mycli'
 )
 
 CONFIGS=(
@@ -146,6 +159,10 @@ function package_installer(){
     done
 }
 
+function install_ohmyzsh_plugins() {
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+}
+
 
 function configure_dots(){
     for conf in ${CONFIGS[@]};
@@ -182,6 +199,7 @@ function main() {
             install_paru
             printf "info -> installing sys packages\n"
             package_installer "paru" "${SYSTEM_PACKAGES[@]}"
+            install_ohmyzsh_plugins  
             ;;
         -s)
             printf "info -> installing sec packages\n"

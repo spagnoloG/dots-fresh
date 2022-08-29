@@ -1,9 +1,9 @@
-style=/home/loki/.config/wofi/style.css
-xoffset=710
-yoffset=275
+style=/home/gasperspagnolo/.config/wofi/style.css
 show=drun
 width=500
+term=alacritty
 height=500
+location=center
 always_parse_args=true
 show_all=true
 print_command=true

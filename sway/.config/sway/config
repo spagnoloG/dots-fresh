@@ -14,11 +14,11 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term kitty
+set $term alacritty
 set $gnome-schema org.gnome.desktop.interface
 
 # Your preferred application launcher
-set $menu wofi --hide-scroll | xargs swaymsg exec -- 
+set $menu wofi --conf=$HOME/.config/wofi/config --style=$HOME/.config/wofi/style.css --show drun -I | xargs swaymsg exec -- 
 
 set $swaylock_handler swaylock \
 	--screenshots \
@@ -42,9 +42,9 @@ exec_always setwall random ~/.wallpapers -c sway
 default_border pixel 2
 
 ## Gaps
-gaps inner 2
-gaps outer 2
-smart_gaps on
+#gaps inner 3
+#gaps outer 3
+#smart_gaps on
 
 # colour of border, background, text, indicator, and child_border
 # Colors
@@ -281,6 +281,8 @@ bindsym $mod+shift+s exec spotify --enable-features=UseOzonePlatform --ozone-pla
 bindsym $mod+shift+m exec blueman-manager
 # run arandr
 bindsym $mod+shift+a exec wdisplays
+# run clipboard history
+bindsym $mod+c exec clipman pick -t wofi 
 
 ## Startup
 
@@ -291,7 +293,7 @@ exec /usr/lib/xfce-polkit/xfce-polkit &
 exec wmname LG3D
 exec nm-applet --indicator
 # clipboard
-exec wl-paste -t text --watch clipman store &
+exec wl-paste -t text --watch clipman store
 # notification
 exec mako &
 # Displays setup
