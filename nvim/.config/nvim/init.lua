@@ -18,6 +18,7 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter-textobjects'                               -- Additional textobjects for treesitter
   use 'neovim/nvim-lspconfig'                                                     -- Collection of configurations for built-in LSP client
   use 'williamboman/nvim-lsp-installer'                                           -- Automatically install language servers to stdpath
+  use 'mfussenegger/nvim-jdtls'                                                   -- java specific lsp
   use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }               -- Autocompletion
   use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } }           -- Snippet Engine and Snippet Expansion
   use 'Mofiqul/dracula.nvim'                                                      -- Theme inspired by Atom
@@ -191,7 +192,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'lua', 'typescript', 'rust', 'go', 'python' },
+  ensure_installed = { 'lua', 'typescript', 'rust', 'go', 'python', 'java'},
 
   highlight = { enable = true },
   indent = { enable = true },

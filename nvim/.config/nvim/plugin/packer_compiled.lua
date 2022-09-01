@@ -114,6 +114,11 @@ _G.packer_plugins = {
     path = "/home/gasperspagnolo/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
+  ["nvim-jdtls"] = {
+    loaded = true,
+    path = "/home/gasperspagnolo/.local/share/nvim/site/pack/packer/start/nvim-jdtls",
+    url = "https://github.com/mfussenegger/nvim-jdtls"
+  },
   ["nvim-lsp-installer"] = {
     loaded = true,
     path = "/home/gasperspagnolo/.local/share/nvim/site/pack/packer/start/nvim-lsp-installer",
