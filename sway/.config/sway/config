@@ -1,23 +1,19 @@
-# Default config for sway
-#
-# Copy this to ~/.config/sway/config and edit it to your liking.
-#
-# Read `man 5 sway` for a complete reference.
-
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
+
 # Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
+
 # Your preferred terminal emulator
 set $term alacritty
 set $gnome-schema org.gnome.desktop.interface
 
-# Your preferred application launcher
+# Application launcher 
 set $menu wofi --conf=$HOME/.config/wofi/config --style=$HOME/.config/wofi/style.css --show drun -I | xargs swaymsg exec -- 
 
 set $swaylock_handler swaylock \
@@ -36,18 +32,14 @@ set $swaylock_handler swaylock \
 	--grace 2 \
 	--fade-in 0.2
 
-#font pango:Iosevka 20
-exec_always setwall random ~/.wallpapers -c sway
-
-default_border pixel 2
-
-## Gaps
+## Gaps & borders
 #gaps inner 3
 #gaps outer 3
 #smart_gaps on
+default_border pixel 2
 
-# colour of border, background, text, indicator, and child_border
 # Colors
+# colour of border, background, text, indicator, and child_border
 client.focused          #7aa2f7 #414868 #c0caf5 #7dcfff   #7aa2f7
 client.focused_inactive #7aa2f7 #414868 #c0caf5 #7dcfff   #7aa2f7
 client.unfocused        #414868 #24283b #a9b1d6 #7dcfff   #414868
@@ -62,8 +54,6 @@ for_window [app_id="pamac-manager"] floating enable, resize set width 80 ppt hei
 for_window [class="Lxappearance"] floating enable, resize set width 60 ppt height 50 ppt
 for_window [app_id="wdisplays" ] floating enable, resize set width 40 ppt height 60 ppt
 for_window [app_id="blueman-manager" ] floating enable, resize set width 40 ppt height 60 ppt
-
-### Output configuration (use kanshi!)
 
 ### Idle configuration
 exec swayidle -w \
@@ -85,8 +75,7 @@ input type:keyboard {
     xkb_layout us,si
     xkb_options grp:win_space_toggle
 }
-#
-#
+
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
@@ -240,6 +229,7 @@ bindsym $mod+r mode "resize"
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
+
 bar {
     position top
     hidden_state hide
@@ -251,56 +241,77 @@ bar {
 
 }
 
+### Non default keybindings 
+
 # Lock screen
 bindsym $mod+f1 exec $swaylock_handler
-# Leave
-bindsym $mod+shift+x exec ~/.config/waybar/scripts/waybar-power.sh
 
 # Take screenshot (Flameshot support on wayland plsss)
 bindsym Print exec grim -g "$(slurp)" - | swappy -f -
+
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec brightnessctl s +5% && echo "Brightness: $( brightnessctl  | sed '1d;3d'  | awk '{ print $4}' ) "  | xargs notify-send 
 bindsym XF86MonBrightnessDown exec brightnessctl s 5%- && echo "Brightness: $( brightnessctl  | sed '1d;3d'  | awk '{ print $4}' ) "  | xargs notify-send
+
 # Volume button controls
-#  
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && echo "Volume: $( pactl list sinks | tr ' ' '\n' | grep -m1 '%' ) "  | xargs notify-send
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && echo "Volume: $( pactl list sinks | tr ' ' '\n' | grep -m1 '%' ) "  | xargs notify-send
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && echo "Volume: $( pactl list sinks | tr ' ' '\n' | grep -m1 '%' ) "  | xargs notify-send
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+
 # Run file manager
 bindsym $mod+shift+f exec thunar
+
 # Run brave
 bindsym $mod+shift+b exec brave
+
 # run blueman manager
 bindsym $mod+shift+m exec blueman-manager
-# run arandr
+
+# run wdisplays 
 bindsym $mod+shift+a exec wdisplays
-# run clipboard history
+
+# display clipboard history
 bindsym $mod+c exec clipman pick -t wofi 
+
 # window switcher
 bindsym $mod+w exec env RUST_BACKTRACE=1 \
     swayr switch-window >> /tmp/swayr.log 2>&1
 
-## Startup
+### Startup application
 
 # impoort env variables
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME
+
 # start polkit
 exec /usr/lib/xfce-polkit/xfce-polkit &
+
+# java applications blank - fix
 exec wmname LG3D
+
+# network manager applet
 exec nm-applet --indicator
-# swayr
+
+# swayr( daemon for window switching)
 exec env RUST_BACKTRACE=1 RUST_LOG=swayr=debug swayrd > /tmp/swayrd.log 2>&1
-# clipboard
-exec wl-paste -t text --watch clipman store
-# notification
+
+# clipboard watcher
+exec wl-paste -t TEXT --watch clipman store
+exec wl-paste -p -t TEXT --watch clipman store -P --histpath="~/.local/share/clipman.json"
+
+# notifications
 exec mako &
-# Displays setup
-exec kanshi
+
+# Automatic display detection
+exec_always kanshi
+
+# Set random wallpaper
+exec_always setwall random ~/.wallpapers -c sway
 
 include @sysconfdir@/sway/config.d/*
