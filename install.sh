@@ -96,6 +96,7 @@ SEC_PACKAGES=(
     'ttf-ms-fonts'
     'dirbuster-wordlists'
     'subfinder-bin'
+    'sonic-visualiser'
 )
 
 DEV_PACKAGES=(
