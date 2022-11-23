@@ -1,1 +1,3 @@
-tags
+lua/
+pack/
+*.json
