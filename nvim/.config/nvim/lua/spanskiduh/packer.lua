@@ -50,4 +50,11 @@ return require('packer').startup(function(use)
 			{'rafamadriz/friendly-snippets'},
 		}
 	}
+
+    use {
+         'lervag/vimtex',
+         -- load config from file
+         config = require('spanskiduh.vimtex')
+    }
+
 end)

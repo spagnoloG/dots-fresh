@@ -114,15 +114,10 @@ DEV_PACKAGES=(
 
 CONFIGS=(
     'alacritty'
-    'sway'
-    'waybar'
-    'kanshi'
     'cava'
-    'mako'
     'nvim'
     'gtk-3.0'
     'tmux'
-    'swaynag'
     'wallpapers'
 )
 
@@ -168,7 +163,7 @@ function install_ohmyzsh_plugins() {
 function configure_dots(){
     for conf in ${CONFIGS[@]};
     do
-        stow -vvvnt  ~ "$conf"
+        stow -vt  ~ "$conf"
     done
     printf "${DOTS_INFO}"
 }

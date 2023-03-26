@@ -49,7 +49,7 @@ bindsym XF86MonBrightnessDown exec brightnessctl s 5%-
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec alacritty 
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -69,7 +69,8 @@ for_window [class="^.*"] border pixel 1
 
 # Floating windows
 # https://gist.github.com/atomize/756c58ab57b7577f4b7bb71eba5c8d12
-for_window [class="Matplotlib"] floating enable, border none resize set 800 600, move position center
+for_window [class="matplotlib"] floating enable, border none resize set 1600 1000, move position center
+for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
 
 # change focus
 bindsym $mod+j focus left
@@ -204,3 +205,9 @@ bindsym Print exec flameshot gui
 
 # Lock screen
 bindsym $mod+F1 exec i3lock -c 000000
+
+# Set random wallpaper
+exec_always --no-startup-id "feh --bg-fill --randomize /home/$(id -un)/.wallpapers/**/*"
+
+# Polkit
+exec "/usr/libexec/xfce-polkit"
