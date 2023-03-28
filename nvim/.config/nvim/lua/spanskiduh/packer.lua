@@ -72,4 +72,8 @@ return require('packer').startup(function(use)
     -- Projects detection
     use {"ahmedkhalf/project.nvim"}
 
+    -- Git signs
+    use { 'lewis6991/gitsigns.nvim',
+        config = require('spanskiduh.gitsigns')}
+
 end)
