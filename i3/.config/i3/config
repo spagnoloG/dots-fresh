@@ -205,9 +205,7 @@ bindsym Print exec flameshot gui
 
 # Lock screen
 bindsym $mod+F1 exec i3lock -c 000000
-
-# Set random wallpaper
-exec_always --no-startup-id "feh --bg-fill --randomize /home/$(id -un)/.wallpapers/**/*"
-
+# Set random wallpaper (no clue why this doesn't work)
+exec_always "/home/gasperspagnolo/.wallpapers/set_wall.sh"
 # Polkit
 exec "/usr/libexec/xfce-polkit"
