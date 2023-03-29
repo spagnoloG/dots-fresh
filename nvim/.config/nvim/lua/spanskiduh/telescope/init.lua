@@ -1,8 +1,13 @@
-local ok, telescope = pcall(require, "telescope")
+local ok1, telescope = pcall(require, "telescope")
+local ok2, telescope_builtin = pcall(require, "telescope.builtin")
 
-if not ok then
+if not ok1 or not ok2 then
     return
 end
+
+vim.keymap.set('n', '<leader>ff', telescope_builtin.find_files, {})
+vim.keymap.set('n', '<C-p>', telescope_builtin.git_files, {})
+vim.keymap.set('n', '<leader>fg', telescope_builtin.live_grep, {})
 
 telescope.setup {
     picker = {
