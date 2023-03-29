@@ -1,7 +1,7 @@
 -- Disable imaps (using Ultisnips)
 vim.g.vimtex_imaps_enabled = 0
--- Do not open pdfviwer on compile
-vim.g.vimtex_view_automatic = 0
+-- open pdfviwer on compile
+vim.g.vimtex_view_automatic = 1
 -- Disable conceal
 vim.g.vimtex_syntax_conceal = {
     accents = 0,
@@ -20,9 +20,9 @@ vim.g.vimtex_syntax_conceal = {
 vim.g.vimtex_quickfix_ignore_mode = 0
 -- PDF viewer settings
 vim.g.vimtex_view_general_viewer = "zathura"
-vim.g.vimtex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
+vim.g.vimtex_view_method = "zathura"
 -- Do not auto open quickfix on compile erros
-vim.g.vimtex_quickfix_mode = 0
+vim.g.vimtex_quickfix_mode = 1
 -- Latex warnings to ignore
 vim.g.vimtex_quickfix_ignore_filters = {
     "Command terminated with space",
@@ -87,4 +87,3 @@ vim.g.vimtex_fold_types = {
         },
     },
 }
-

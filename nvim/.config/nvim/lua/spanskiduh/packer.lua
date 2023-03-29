@@ -20,7 +20,11 @@ return require('packer').startup(function(use)
     use ('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
 
     use ( 'nvim-treesitter/playground' )
-    use ( 'theprimeagen/harpoon' )
+
+    use { 'theprimeagen/harpoon' ,
+        config = require('spanskiduh.harpoon')
+    }
+
     use ( 'mbbill/undotree' )
     use ( 'tpope/vim-fugitive' )
 
@@ -43,7 +47,8 @@ return require('packer').startup(function(use)
             -- Snippets
             {'L3MON4D3/LuaSnip'},
             {'rafamadriz/friendly-snippets'},
-        }
+        },
+        config = require('spanskiduh.lsp')
     }
 
     use {
