@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:monospace 8 
 
 ##-- Colors ------------------------------
 
@@ -66,7 +66,15 @@ bindsym $mod+Return exec alacritty
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id dmenu_run
+#bindsym $mod+d exec --no-startup-id dmenu_run
+
+# ROFI
+bindsym $mod+d 				    exec --no-startup-id ~/.config/i3/rofi/bin/launcher
+bindsym $mod+n 					exec --no-startup-id ~/.config/i3/rofi/bin/network_menu
+bindsym $mod+x 					exec --no-startup-id ~/.config/i3/rofi/bin/powermenu
+bindsym $mod+m 					exec --no-startup-id ~/.config/i3/rofi/bin/mpd
+bindsym $mod+F2 				exec --no-startup-id ~/.config/i3/rofi/bin/windows
+
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
@@ -204,9 +212,6 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-        status_command i3status
-}
 
 # network manager applet
 exec nm-applet --indicator
@@ -217,6 +222,9 @@ bindsym Print exec flameshot gui
 # Lock screen
 bindsym $mod+F1 exec i3lock -c 000000
 # Set random wallpaper (no clue why this doesn't work)
-exec_always "/home/gasperspagnolo/.wallpapers/set_wall.sh"
+exec_always "$HOME/.config/i3/set_wallpaper.sh" 
+# Start polybar
+exec_always "$HOME/.config/i3/launch_polybar.sh" 
+
 # Polkit
 exec "/usr/libexec/xfce-polkit"
