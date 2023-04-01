@@ -222,9 +222,9 @@ bindsym Print exec flameshot gui
 # Lock screen
 bindsym $mod+F1 exec i3lock -c 000000
 # Set random wallpaper (no clue why this doesn't work)
-exec_always "$HOME/.config/i3/set_wallpaper.sh" 
+exec_always --no-startup-id "$HOME/.config/i3/set_wallpaper.sh" 
 # Start polybar
-exec_always "$HOME/.config/i3/launch_polybar.sh" 
+exec_always --no-startup-id "$HOME/.config/i3/launch_polybar.sh" 
 
 # Polkit
 exec "/usr/libexec/xfce-polkit"

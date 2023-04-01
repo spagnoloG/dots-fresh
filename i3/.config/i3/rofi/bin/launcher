@@ -5,8 +5,8 @@
 DIR="$HOME/.config/i3"
 
 rofi \
-	-show drun \
-	-modi run,drun,ssh,window \
+	-show run \
+	-modi run,ssh,window \
 	-no-lazy-grab \
 	-scroll-method 0 \
 	-drun-match-fields all \
