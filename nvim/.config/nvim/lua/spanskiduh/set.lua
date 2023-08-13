@@ -32,5 +32,15 @@ vim.opt.colorcolumn = "80"
 
 vim.g.mapleader = " "
 
+vim.g.autoread = true
+
 -- Colorscheme
 vim.cmd.colorscheme("onedark")
+
+-- Autosave
+vim.cmd('autocmd FocusLost, BufLeave, BufHidden * silent! wall')
+
+-- Copilot parse yaml
+vim.cmd('filetype on')  -- Enable filetype detection
+vim.cmd('autocmd BufRead,BufNewFile *.yml,*.yaml set filetype=yaml')  -- Set the filetype for YAML files
+vim.g.copilot_filetypes = {yaml = true, yml = true}
