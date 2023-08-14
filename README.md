@@ -1,14 +1,13 @@
 ### dots-fresh
-Collection of my dotfiles. Do not just run this script without reading what it does!
+Collection of my dotfiles.
+
+Fristly install [nix-os package manager](https://github.com/dnkmmr69420/nix-installer-scripts).
+
 ## Usage
 ```bash
-Usage: sudo install.sh [-option]
-Options:
-    --help    Print this message
-    -i        Install base packages (sudo perms needed)
-    -s        Instal sec packages
-    -d        Install dev packages
-    -a        Apply dots
+export NIXPKGS_ALLOW_UNFREE=1
+nix-env -iA myPackages -f default.nix
+stow -nvt ~ home_dir
 ```
 ## Screenshot
 ![screenshot](./screenshots/screenshot.png)
