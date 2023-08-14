@@ -7,6 +7,11 @@ let
     "discord"
     "spotify"
     "smug"
+    "neovim"
+    "joplin"
+    "fira-code"
+    "uget"
+    "zathura"
   ];
    config = {
     allowUnfree = true;
