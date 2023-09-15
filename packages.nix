@@ -12,6 +12,7 @@ let
     "fira-code"
     "uget"
     "zathura"
+    "gimp"
   ];
    config = {
     allowUnfree = true;
