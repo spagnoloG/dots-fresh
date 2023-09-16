@@ -50,6 +50,7 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelModules = [ "kvm-intel" ];
+  boot.blacklistedKernelModules = [ "nouveau" ]; # Disable nvidia GPU, use it just for compute
 
   # Networking settings
   networking.hostName = "nixos";
@@ -57,6 +58,7 @@ in {
 
   # User configurations
   users.users.spagnologasper = {
+    shell = pkgs.zsh;
     isNormalUser = true;
     description = "spagnologasper";
     extraGroups = [ "wheel" "disk" "libvirtd" "docker" "audio" "video" "input" "systemd-journal" "networkmanager" "network" ];
@@ -76,6 +78,41 @@ in {
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+
+  # Nvidia GPU
+  hardware.nvidia = {
+
+    # Modesetting is required.
+    modesetting.enable = true;
+
+    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+    powerManagement.enable = false;
+    # Fine-grained power management. Turns off GPU when not in use.
+    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+    powerManagement.finegrained = false;
+
+    # Use the NVidia open source kernel module (not to be confused with the
+    # independent third-party "nouveau" open source driver).
+    # Support is limited to the Turing and later architectures. Full list of 
+    # supported GPUs is at: 
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Only available from driver 515.43.04+
+    # Do not disable this unless your GPU is unsupported or if you have a good reason to.
+    open = true;
+
+    # Enable the Nvidia settings menu,	
+    # accessible via `nvidia-settings`.
+    nvidiaSettings = true;
+
+    # Optionally, you may need to select the appropriate driver version for your specific GPU.
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
 
   services.qemuGuest.enable = true;
 
@@ -131,7 +168,6 @@ in {
   };
   programs.waybar.enable = true;
   qt.platformTheme = "qt5ct";
-  hardware.opengl.driSupport32Bit = true;
 
   # Packages
   environment.systemPackages = with pkgs; [
@@ -160,6 +196,8 @@ in {
     gparted
     remmina
     unclutter
+    cudatoolkit
+    linuxPackages.nvidia_x11
     picom
     nitrogen
     rofi
@@ -228,10 +266,24 @@ in {
     stow
     brightnessctl
     flameshot
+    feh
+    zathura
+    neofetch
   ];
 
   nixpkgs.overlays = [ neovimOverlay ];
   nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" ];
+
+  # Env variables
+  environment.variables = {
+    CUDA_PATH = "${pkgs.cudatoolkit}";
+    # Since setting LD_LIBRARY_PATH system-wide can interfere with other applications, 
+    # I've commented it out, but you can uncomment if you find it necessary.
+    # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_CCFLAGS = "-I/usr/include";
+  };
+
 
   xdg.portal = {
     enable = true;
@@ -241,6 +293,7 @@ in {
   };
 
   programs.mtr.enable = true;
+  programs.zsh.enable = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;

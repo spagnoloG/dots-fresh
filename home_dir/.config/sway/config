@@ -20,10 +20,30 @@ set $term alacritty
 # on the original workspace that the command was run on.
 set $menu dmenu_path | dmenu | xargs swaymsg exec --
 
+# class                 border  backgr. text    indicator child_border
+client.focused          #DA6E89 #DA6E89 #FFFFFF #98C379   #DA6E89
+client.focused_inactive #61AFEF #61AFEF #1E222A #98C379   #61AFEF
+client.unfocused        #2C3038 #2C3038 #FFFFFF #98C379   #2C3038
+client.urgent           #C678DD #C678DD #FFFFFF #98C379   #C678DD
+client.placeholder      #1E222A #1E222A #FFFFFF #98C379   #1E222A
+
+client.background       #1E222A
+
+#Hide window title bar
+default_border pixel 1
+default_floating_border pixel 1
+for_window [class="^.*"] border pixel 1
+
+# Floating windows
+# https://gist.github.com/atomize/756c58ab57b7577f4b7bb71eba5c8d12
+for_window [class="matplotlib"] floating enable, border none resize set 1600 1000, move position center
+for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
+
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /run/current-system/sw/share/backgrounds/sway/)
-output * bg /run/current-system/sw/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/13.png fill
 #
 # Example configuration:
 #
@@ -110,30 +130,41 @@ output * bg /run/current-system/sw/share/backgrounds/sway/Sway_Wallpaper_Blue_19
 #
 # Workspaces:
 #
-    # Switch to workspace
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
+
+    set $ws1  "I:term"
+    set $ws2  "II:web"
+    set $ws3  "III:code"
+    set $ws4  "IV:messaging"
+    set $ws5  "V:media"
+    set $ws6  "VI:vm"
+    set $ws7  "VII:joplin"
+    set $ws8  "VIII:misc"
+    set $ws9  "IX:misc"
+    set $ws10 "X:music"
+    
+    bindsym $mod+1 workspace $ws1
+    bindsym $mod+2 workspace $ws2
+    bindsym $mod+3 workspace $ws3
+    bindsym $mod+4 workspace $ws4
+    bindsym $mod+5 workspace $ws5
+    bindsym $mod+6 workspace $ws6
+    bindsym $mod+7 workspace $ws7
+    bindsym $mod+8 workspace $ws8
+    bindsym $mod+9 workspace $ws9
+    bindsym $mod+0 workspace $ws10
+
     # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
+    bindsym $mod+Shift+1 move container to workspace $ws1
+    bindsym $mod+Shift+2 move container to workspace $ws2
+    bindsym $mod+Shift+3 move container to workspace $ws3
+    bindsym $mod+Shift+4 move container to workspace $ws4
+    bindsym $mod+Shift+5 move container to workspace $ws5
+    bindsym $mod+Shift+6 move container to workspace $ws6
+    bindsym $mod+Shift+7 move container to workspace $ws7
+    bindsym $mod+Shift+8 move container to workspace $ws8
+    bindsym $mod+Shift+9 move container to workspace $ws9
+    bindsym $mod+Shift+0 move container to workspace $ws10
+
 #
 # Layout stuff:
 #
@@ -200,6 +231,21 @@ bindsym $mod+r mode "resize"
 bindsym XF86MonBrightnessUp exec brightnessctl s +5% 
 bindsym XF86MonBrightnessDown exec brightnessctl s 5%-
 
+### Audio control
+bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ 
+bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- 
+bindsym XF86AudioMute exec --no-startup-id  wpctl set-volume @DEFAULT_AUDIO_SINK@ 0
+bindsym XF86AudioMicMute exec --no-startup-id wpctl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Polkit
+exec "/usr/libexec/xfce-polkit"
+
+### Screenshot
+bindsym Print exec flameshot gui
+
+### Screen lock
+bindsym $mod+F1 exec swaylock -c 000000
+
 #
 # Status Bar:
 #
@@ -212,9 +258,12 @@ bar {
     status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
 
     colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        statusline #FFFFFF
+        background #1E222A
+        focused_workspace #DA6E89 #DA6E89 #FFFFFF
+        inactive_workspace #2C3038 #2C3038 #FFFFFF
+        urgent_workspace #C678DD #C678DD #FFFFFF
+        binding_mode #DA6E89 #DA6E89 #FFFFFF
     }
 }
 
