@@ -13,3 +13,8 @@ profile {
     output 'Samsung Electric Company C34H89x H4ZRB05512' enable mode 3440x1440@100Hz position 3070,0
 
 }
+
+profile {
+	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 1.00 position 1128,3130
+    output 'Avolites Ltd ARZOPA -S1 0000000000000' enable mode 1920x1080@60Hz position 1690,2050
+}

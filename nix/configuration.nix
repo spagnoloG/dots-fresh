@@ -49,8 +49,9 @@ in {
   # Hardware and bootloader configurations
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.blacklistedKernelModules = [ "nouveau" ]; # Disable nvidia GPU, use it just for compute
+  boot.kernelModules = [ "kvm-intel"  "wireguard"];
+  boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
+  boot.blacklistedKernelModules = [ "nouveau" ];
 
   # Networking settings
   networking.hostName = "nixos";
@@ -108,14 +109,16 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  services.xserver.videoDrivers = [ "amdgpu" "nvidia"];
+
   hardware.opengl = {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
   };
 
+  nixpkgs.config.cudaSupport = true;
   services.qemuGuest.enable = true;
-
   virtualisation.docker.enable = true;
 
   virtualisation.libvirtd = {
@@ -165,10 +168,26 @@ in {
       export _JAVA_AWT_WM_NONREPARENTING=1
       export MOZ_ENABLE_WAYLAND=1
     '';
+    extraOptions = [
+      "--unsupported-gpu"
+    ];
   };
   programs.waybar.enable = true;
   qt.platformTheme = "qt5ct";
 
+  services.xserver = {
+    enable = true;
+    displayManager = {
+      defaultSession = "sway";
+      sddm = {
+        enable = true;
+      };
+    };
+  };
+	
+  # Wayland options for brave
+  nixpkgs.config.brave.commandLineArgs = "--enable-features=UseOzonePlatform --ozone-platform=wayland";
+	
   # Packages
   environment.systemPackages = with pkgs; [
     alacritty
@@ -254,6 +273,7 @@ in {
     helm
     awscli
     terraform
+    ansible
     kops
     pulumi
     discord
@@ -261,7 +281,6 @@ in {
     brave
     bluez
     blueberry
-    tmux
     git
     stow
     brightnessctl
@@ -269,6 +288,15 @@ in {
     feh
     zathura
     neofetch
+    cava
+    nvtop
+    acpi
+    wireguard-tools
+    lsd
+    htop
+    nodejs_18
+    ranger
+    nmap
   ];
 
   nixpkgs.overlays = [ neovimOverlay ];
@@ -293,7 +321,91 @@ in {
   };
 
   programs.mtr.enable = true;
-  programs.zsh.enable = true;
+  programs.zsh = {
+     enable = true;
+     # Set the aliases
+     shellAliases = {
+  	md-notes = "cd ~/Documents/md-notes/ && nvim .";
+  	randwall = "feh --bg-scale --randomize ~/pictures/wallpapers/*";
+  	zapiski = "~/Documents/faks_git/FRI-ZAPISKI";
+  	ctf = "cd ~/Documents/ctf/2022";
+  	faks = "cd ~/Nextcloud/faks/3-letnik/2sem";
+  	faks-git = "cd ~/Documents/faks_git";
+  	rm = "rm -i";
+  	night = "brightnessctl s 1%";
+  	nightlock = "swaylock -c 000000";
+  	hsrv = "ssh hsrv";
+  	rs = "export QT_QPA_PLATFORM=xcb; rstudio-bin --no-sandbox &";
+  	rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
+  	nix-update = "nix-channel --update && nix-env -u";
+	ls = "lsd";
+     };
+     shellInit = ''
+     	export EDITOR='nvim'
+     '';
+     autosuggestions.enable = true;
+     ohMyZsh = {
+       enable = true;
+       theme = "cypher";
+       plugins = [
+          "sudo"
+          "terraform"
+          "systemadmin"
+          "vi-mode"
+	  "z"
+	  "colorize"
+	  "fzf"
+	  "compleat"
+	  "ansible"
+	  "thefuck"
+      ];
+    };	
+  };
+
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+  
+    extraConfig = ''
+      # Alacritty term support
+      set -g default-terminal "tmux-256color"
+      set -sg terminal-overrides ",*:RGB"
+      
+      # Enable vim keys
+      set-window-option -g mode-keys vi
+      bind h select-pane -L
+      bind j select-pane -D
+      bind k select-pane -U
+      bind l select-pane -R
+      bind -r ^ last-window
+      
+      bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'wl-copy'
+      
+      # Remap prefix to Control + a
+      # unbind C-b
+      # set-option -g prefix C-a
+      # bind-key C-a send-prefix
+      
+      # Set mouse
+      set -g mouse on
+      
+      # Increase history size
+      set-option -g history-limit 10000
+      
+      bind-key E run-shell "script -f /tmp/script_log.txt"
+      
+      # Scripts
+      # bind-key -r S run-shell "tmux neww ~/.local/scripts/ssh-connect.sh"
+      # bind-key T run-shell "tmux neww tms"
+      
+      # Colors
+      set-option -g pane-active-border-style fg='#6272a4'
+      set-option -g pane-border-style fg='#ff79c6'
+      # set-option -g status-bg black
+      set-option -g status-fg black
+    '';
+  };
+
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
@@ -301,5 +413,26 @@ in {
 
   ## Bluetooth
   hardware.bluetooth.enable = true;
+
+  ## Wireguard, skip for now as it does not wanna work, using network manager for now
+  #networking.firewall.allowedUDPPorts = [ 51820 ]; # allow wireguard traffic through firewall
+
+  #networking.wireguard.interfaces = {
+  #  de = {
+  #    ips = [ "10.13.13.3" ];
+  #    listenPort = 51820;
+
+  #    # Note: If you have a separate file for the private key, use the `privateKeyFile` option.
+  #    privateKeyFile = "/etc/nixos/wireguard/de_privkey";
+
+  #    peers = [
+  #      {
+  #        allowedIPs = [ "0.0.0.0/0" ];
+  #        persistentKeepalive = 25;
+  #      }
+  #    ];
+  #  };
+  #};
+
 }
 
