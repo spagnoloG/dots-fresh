@@ -76,6 +76,7 @@ in {
 
   services.dbus.enable = true;
   services.printing.enable = true;
+
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -108,6 +109,7 @@ in {
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
+  virtualisation.docker.enableNvidia = true; # Enable GPU support in container
 
   services.xserver.videoDrivers = [ "amdgpu" "nvidia"];
 
@@ -216,7 +218,6 @@ in {
     remmina
     unclutter
     cudatoolkit
-    linuxPackages.nvidia_x11
     picom
     nitrogen
     rofi
@@ -297,21 +298,35 @@ in {
     nodejs_18
     ranger
     nmap
+    thefuck
+    uget
+    p7zip
+    black
+    zip
+    unzip
+    jq
+    imagemagick
+    vscode
   ];
 
   nixpkgs.overlays = [ neovimOverlay ];
   nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" ];
+	
+  environment = {
+     variables = {
+       CUDA_PATH = "${pkgs.cudatoolkit}";
+       # Since setting LD_LIBRARY_PATH system-wide can interfere with other applications, 
+       # I've commented it out, but you can uncomment if you find it necessary.
+       # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
+       EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+       EXTRA_CCFLAGS = "-I/usr/include";
+     };
 
-  # Env variables
-  environment.variables = {
-    CUDA_PATH = "${pkgs.cudatoolkit}";
-    # Since setting LD_LIBRARY_PATH system-wide can interfere with other applications, 
-    # I've commented it out, but you can uncomment if you find it necessary.
-    # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_CCFLAGS = "-I/usr/include";
+     sessionVariables = {
+  	LD_LIBRARY_PATH = with pkgs; 
+    	"${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib";
+    };
   };
-
 
   xdg.portal = {
     enable = true;
