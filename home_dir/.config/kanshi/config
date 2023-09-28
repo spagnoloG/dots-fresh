@@ -5,13 +5,13 @@ profile {
 }
 
 profile {
-	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 1.00
+	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 2.0 
 }
 
 profile {
-	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 1.00 position 3279,1440
-    output 'Samsung Electric Company C34H89x H4ZRB05512' enable mode 3440x1440@100Hz position 3070,0
-
+	#output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 1.00 position 3279,1440
+    output 'Samsung Electric Company C34H89x H4ZRB05512' enable mode 3440x1440@100Hz #position 3070,0
+	output 'California Institute of Technology 0x1410 Unknown' disable 
 }
 
 profile {

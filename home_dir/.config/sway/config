@@ -39,7 +39,7 @@ for_window [class="feh"] floating enable, border none resize set 1600 1000, move
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /run/current-system/sw/share/backgrounds/sway/)
-output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/13.png fill
+output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill
 #
 # Example configuration:
 #
@@ -130,39 +130,61 @@ output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/13.
 # Workspaces:
 #
 
-    set $ws1  "I:term"
-    set $ws2  "II:web"
-    set $ws3  "III:code"
-    set $ws4  "IV:messaging"
-    set $ws5  "V:media"
-    set $ws6  "VI:vm"
-    set $ws7  "VII:joplin"
-    set $ws8  "VIII:misc"
-    set $ws9  "IX:misc"
-    set $ws10 "X:music"
-    
-    bindsym $mod+1 workspace $ws1
-    bindsym $mod+2 workspace $ws2
-    bindsym $mod+3 workspace $ws3
-    bindsym $mod+4 workspace $ws4
-    bindsym $mod+5 workspace $ws5
-    bindsym $mod+6 workspace $ws6
-    bindsym $mod+7 workspace $ws7
-    bindsym $mod+8 workspace $ws8
-    bindsym $mod+9 workspace $ws9
-    bindsym $mod+0 workspace $ws10
-
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
     # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace $ws1
-    bindsym $mod+Shift+2 move container to workspace $ws2
-    bindsym $mod+Shift+3 move container to workspace $ws3
-    bindsym $mod+Shift+4 move container to workspace $ws4
-    bindsym $mod+Shift+5 move container to workspace $ws5
-    bindsym $mod+Shift+6 move container to workspace $ws6
-    bindsym $mod+Shift+7 move container to workspace $ws7
-    bindsym $mod+Shift+8 move container to workspace $ws8
-    bindsym $mod+Shift+9 move container to workspace $ws9
-    bindsym $mod+Shift+0 move container to workspace $ws10
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+
+    #set $ws1  "I:term"
+    #set $ws2  "II:web"
+    #set $ws3  "III:code"
+    #set $ws4  "IV:messaging"
+    #set $ws5  "V:media"
+    #set $ws6  "VI:vm"
+    #set $ws7  "VII:joplin"
+    #set $ws8  "VIII:misc"
+    #set $ws9  "IX:misc"
+    #set $ws10 "X:music"
+    #
+    #bindsym $mod+1 workspace $ws1
+    #bindsym $mod+2 workspace $ws2
+    #bindsym $mod+3 workspace $ws3
+    #bindsym $mod+4 workspace $ws4
+    #bindsym $mod+5 workspace $ws5
+    #bindsym $mod+6 workspace $ws6
+    #bindsym $mod+7 workspace $ws7
+    #bindsym $mod+8 workspace $ws8
+    #bindsym $mod+9 workspace $ws9
+    #bindsym $mod+0 workspace $ws10
+
+    ## Move focused container to workspace
+    #bindsym $mod+Shift+1 move container to workspace $ws1
+    #bindsym $mod+Shift+2 move container to workspace $ws2
+    #bindsym $mod+Shift+3 move container to workspace $ws3
+    #bindsym $mod+Shift+4 move container to workspace $ws4
+    #bindsym $mod+Shift+5 move container to workspace $ws5
+    #bindsym $mod+Shift+6 move container to workspace $ws6
+    #bindsym $mod+Shift+7 move container to workspace $ws7
+    #bindsym $mod+Shift+8 move container to workspace $ws8
+    #bindsym $mod+Shift+9 move container to workspace $ws9
+    #bindsym $mod+Shift+0 move container to workspace $ws10
 
 #
 # Layout stuff:
@@ -252,21 +274,25 @@ bindsym $mod+Shift+b brave --enable-features=UseOzonePlatform --ozone-platform=w
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
+#bar {
+#    position top
+#
+#    # When the status_command prints a new line to stdout, swaybar updates.
+#    # The default just shows the current date and time.
+#    status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
+#
+#    colors {
+#        statusline #FFFFFF
+#        background #1E222A
+#        focused_workspace #DA6E89 #DA6E89 #FFFFFF
+#        inactive_workspace #2C3038 #2C3038 #FFFFFF
+#        urgent_workspace #C678DD #C678DD #FFFFFF
+#        binding_mode #DA6E89 #DA6E89 #FFFFFF
+#    }
+#}
+
 bar {
-    position top
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
-
-    colors {
-        statusline #FFFFFF
-        background #1E222A
-        focused_workspace #DA6E89 #DA6E89 #FFFFFF
-        inactive_workspace #2C3038 #2C3038 #FFFFFF
-        urgent_workspace #C678DD #C678DD #FFFFFF
-        binding_mode #DA6E89 #DA6E89 #FFFFFF
-    }
+    swaybar_command waybar
 }
 
 include /etc/sway/config.d/*

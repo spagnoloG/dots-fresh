@@ -1,58 +1,82 @@
-# Colors (iTerm 2 default theme)
 colors:
-  # Default colors
-  primary:
-    background: '0x101421'
-    foreground: '0xfffbf6'
+    primary:
+        background: "#24273A" # base
+        foreground: "#CAD3F5" # text
+        dim_foreground: "#CAD3F5" # text
+        bright_foreground: "#CAD3F5" # text
 
-  # Normal colors
-  normal:
-    black:   '0x2e2e2e'
-    red:     '0xeb4129'
-    green:   '0xabe047'
-    yellow:  '0xf6c744'
-    blue:    '0x47a0f3'
-    magenta: '0x7b5cb0'
-    cyan:    '0x64dbed'
-    white:   '0xe5e9f0'
+    cursor:
+        text: "#24273A" # base
+        cursor: "#F4DBD6" # rosewater
+    vi_mode_cursor:
+        text: "#24273A" # base
+        cursor: "#B7BDF8" # lavender
 
-  # Bright colors
-  bright:
-    black:   '0x565656'
-    red:     '0xec5357'
-    green:   '0xc0e17d'
-    yellow:  '0xf9da6a'
-    blue:    '0x49a4f8'
-    magenta: '0xa47de9'
-    cyan:    '0x99faf2'
-    white:   '0xffffff'
+    search:
+        matches:
+            foreground: "#24273A" # base
+            background: "#A5ADCB" # subtext0
+        focused_match:
+            foreground: "#24273A" # base
+            background: "#A6DA95" # green
+        footer_bar:
+            foreground: "#24273A" # base
+            background: "#A5ADCB" # subtext0
 
+    hints:
+        start:
+            foreground: "#24273A" # base
+            background: "#EED49F" # yellow
+        end:
+            foreground: "#24273A" # base
+            background: "#A5ADCB" # subtext0
+
+    selection:
+        text: "#24273A" # base
+        background: "#F4DBD6" # rosewater
+
+    normal:
+        black: "#494D64" # surface1
+        red: "#ED8796" # red
+        green: "#A6DA95" # green
+        yellow: "#EED49F" # yellow
+        blue: "#8AADF4" # blue
+        magenta: "#F5BDE6" # pink
+        cyan: "#8BD5CA" # teal
+        white: "#B8C0E0" # subtext1
+
+    bright:
+        black: "#5B6078" # surface2
+        red: "#ED8796" # red
+        green: "#A6DA95" # green
+        yellow: "#EED49F" # yellow
+        blue: "#8AADF4" # blue
+        magenta: "#F5BDE6" # pink
+        cyan: "#8BD5CA" # teal
+        white: "#A5ADCB" # subtext0
+
+    dim:
+        black: "#494D64" # surface1
+        red: "#ED8796" # red
+        green: "#A6DA95" # green
+        yellow: "#EED49F" # yellow
+        blue: "#8AADF4" # blue
+        magenta: "#F5BDE6" # pink
+        cyan: "#8BD5CA" # teal
+        white: "#B8C0E0" # subtext1
+
+    indexed_colors:
+        - { index: 16, color: "#F5A97F" }
+        - { index: 17, color: "#F4DBD6" }
+window.opacity: 1.00
+window:
+  padding:
+    x: 5
+    y: 5
 font:
-  # Normal (roman) font face
   normal:
-    # Font family
-    family: FiraCode
-    # The `style` can be specified to pick a specific face.
+    family: JetbrainsMonoNL
     style: Regular
-
-  # Bold font face
-  bold:
-    # Font family
-    family: FiraCode 
-    # The `style` can be specified to pick a specific face.
-    style: Bold
-
-  # Italic font face
-  italic:
-    # Font family
-    family: FiraCode 
-    # The `style` can be specified to pick a specific face.
-    style: Italic
-
-  # Bold italic font face
-  bold_italic:
-    # Font family
-    family: FiraCode 
-    # The `style` can be specified to pick a specific face.
-    style: Bold Italic
-
+  size: 12
+live_config_reload: true
+dynamic_padding: true

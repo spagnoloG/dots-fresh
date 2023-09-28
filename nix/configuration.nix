@@ -57,6 +57,11 @@ in {
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
+  networking.extraHosts =
+  ''
+    169.254.0.5  ataka.local   caronte   ataka
+  '';
+
   # User configurations
   users.users.spagnologasper = {
     shell = pkgs.zsh;
@@ -76,7 +81,25 @@ in {
 
   services.dbus.enable = true;
   services.printing.enable = true;
+  
+  # start polkit on login
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
+    };
+  };
 
+  security.polkit.enable = true;
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -109,6 +132,7 @@ in {
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
+
   virtualisation.docker.enableNvidia = true; # Enable GPU support in container
 
   services.xserver.videoDrivers = [ "amdgpu" "nvidia"];
@@ -307,6 +331,14 @@ in {
     jq
     imagemagick
     vscode
+    wl-mirror
+    etcher
+    polkit_gnome
+    openvpn
+    tshark
+    tcpdump
+    xournalpp
+    zlib
   ];
 
   nixpkgs.overlays = [ neovimOverlay ];
