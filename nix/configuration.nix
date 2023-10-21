@@ -34,6 +34,16 @@ let
     };
   };
 
+  my-R-packages = with pkgs.rPackages; [ ggplot2 dplyr xts gridExtra shiny tidyr];
+
+  RStudio-with-my-packages = pkgs.rstudioWrapper.override{ 
+  	packages = my-R-packages; 
+  };
+
+  R-with-my-packages = pkgs.rWrapper.override{ 
+	packages = my-R-packages; 
+  };
+
 in {
 
   imports = [ ./hardware-configuration.nix ];
@@ -59,7 +69,7 @@ in {
 
   networking.extraHosts =
   ''
-    169.254.0.5  ataka.local   caronte   ataka
+    78.46.195.184    grafana.ataka.local    adminer.ataka.local    api.ataka.local    rabbitmq.ataka.local
   '';
 
   # User configurations
@@ -141,6 +151,10 @@ in {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
+    extraPackages = with pkgs; [
+        libGLU
+    	libGL
+    ];
   };
 
   nixpkgs.config.cudaSupport = true;
@@ -216,6 +230,9 @@ in {
 	
   # Packages
   environment.systemPackages = with pkgs; [
+    RStudio-with-my-packages
+    R-with-my-packages
+    R
     alacritty
     dbus-sway-environment
     configure-gtk
@@ -268,8 +285,6 @@ in {
     libclang
     clang
     cmake
-    libGLU
-    libGL
     libtool
     libvterm
     ncurses5
@@ -322,7 +337,6 @@ in {
     nodejs_18
     ranger
     nmap
-    thefuck
     uget
     p7zip
     black
@@ -339,10 +353,33 @@ in {
     tcpdump
     xournalpp
     zlib
+    glib
+    sshpass
+    libsForQt5.qtstyleplugin-kvantum
+    ghidra-bin
+    anki-bin
+    catppuccin-kvantum
+    glibc
+    qt5.full
+    exiftool
+    shotwell
+    file
+    superTuxKart
+    btop
+    joplin-desktop
+    steghide
+    pavucontrol
+    mpv
+    fcrackzip
+    rsbkb
+    jetbrains-toolbox
+    gimp
+    google-chrome
+    motrix
   ];
 
   nixpkgs.overlays = [ neovimOverlay ];
-  nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" ];
+  nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" "qtwebkit-5.212.0-alpha4"];
 	
   environment = {
      variables = {
@@ -351,12 +388,14 @@ in {
        # I've commented it out, but you can uncomment if you find it necessary.
        # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
        EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+       QT_STYLE_OVERRIDE = "kvantum";
+       QT_QPA_PLATFORMTHEME = "qt5ct";
        EXTRA_CCFLAGS = "-I/usr/include";
      };
 
      sessionVariables = {
   	LD_LIBRARY_PATH = with pkgs; 
-    	"${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib";
+    	"${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
     };
   };
 
@@ -386,9 +425,20 @@ in {
   	rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
   	nix-update = "nix-channel --update && nix-env -u";
 	ls = "lsd";
+	sus = "systemctl suspend";
+	sur = "systemctl reboot";
+	sup = "power off";
      };
      shellInit = ''
      	export EDITOR='nvim'
+
+	bin_txt() {
+            curl -X PUT --data "$1" https://p.spanskiduh.dev
+        }
+
+        bin_file() {
+            curl -X PUT --data-binary "@$1" https://p.spanskiduh.dev
+        }
      '';
      autosuggestions.enable = true;
      ohMyZsh = {
@@ -401,10 +451,8 @@ in {
           "vi-mode"
 	  "z"
 	  "colorize"
-	  "fzf"
 	  "compleat"
 	  "ansible"
-	  "thefuck"
       ];
     };	
   };
@@ -480,6 +528,13 @@ in {
   #    ];
   #  };
   #};
+
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
 
 }
 

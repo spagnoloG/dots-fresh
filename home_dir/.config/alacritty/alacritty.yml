@@ -75,7 +75,7 @@ window:
     y: 5
 font:
   normal:
-    family: JetbrainsMonoNL
+    family: Iosevka 
     style: Regular
   size: 12
 live_config_reload: true

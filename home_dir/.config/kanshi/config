@@ -5,7 +5,7 @@ profile {
 }
 
 profile {
-	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 2.0 
+	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 1.0
 }
 
 profile {
