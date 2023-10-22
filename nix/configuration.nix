@@ -1,5 +1,6 @@
 { config, pkgs, lib, ... }:
 
+##### Variable definitions #####
 let
   dbus-sway-environment = pkgs.writeTextFile {
     name = "dbus-sway-environment";
@@ -25,8 +26,7 @@ let
       gsettings set $gnome_schema gtk-theme 'Dracula'
     '';
   };
-  
-  # This overlay allows us to override some nixpkgs attributes.
+
   neovimOverlay = self: super: {
     neovim = super.neovim.override {
       viAlias = true;
@@ -34,21 +34,44 @@ let
     };
   };
 
-  my-R-packages = with pkgs.rPackages; [ ggplot2 dplyr xts gridExtra shiny tidyr];
+  my-R-packages = with pkgs.rPackages; [
+    ggplot2
+    dplyr
+    xts
+    gridExtra
+    shiny
+    tidyr
+  ];
 
-  RStudio-with-my-packages = pkgs.rstudioWrapper.override{ 
-  	packages = my-R-packages; 
-  };
+  RStudio-with-my-packages =
+    pkgs.rstudioWrapper.override { packages = my-R-packages; };
 
-  R-with-my-packages = pkgs.rWrapper.override{ 
-	packages = my-R-packages; 
-  };
+  R-with-my-packages = pkgs.rWrapper.override { packages = my-R-packages; };
 
 in {
 
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix <home-manager/nixos> ];
 
-  # General system settings
+  ##### Environment Variables #####
+  environment = {
+    variables = {
+      CUDA_PATH = "${pkgs.cudatoolkit}";
+      # Since setting LD_LIBRARY_PATH system-wide can interfere with other applications, 
+      # I've commented it out, but you can uncomment if you find it necessary.
+      # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
+      EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+      QT_STYLE_OVERRIDE = "kvantum";
+      QT_QPA_PLATFORMTHEME = "qt5ct";
+      EXTRA_CCFLAGS = "-I/usr/include";
+    };
+
+    sessionVariables = {
+      LD_LIBRARY_PATH = with pkgs;
+        "${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
+    };
+  };
+
+  ##### General system settings #####
   time.timeZone = "Europe/Ljubljana";
   i18n.defaultLocale = "en_US.UTF-8";
   system.stateVersion = "23.05";
@@ -56,63 +79,15 @@ in {
   system.autoUpgrade.allowReboot = true;
   nixpkgs.config.allowUnfree = true;
 
-  # Hardware and bootloader configurations
+  ##### Hardware and bootloader configurations #####
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelModules = [ "kvm-intel"  "wireguard"];
+  boot.kernelModules = [ "kvm-intel" "wireguard" ];
   boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
   boot.blacklistedKernelModules = [ "nouveau" ];
 
-  # Networking settings
-  networking.hostName = "nixos";
-  networking.networkmanager.enable = true;
-
-  networking.extraHosts =
-  ''
-    78.46.195.184    grafana.ataka.local    adminer.ataka.local    api.ataka.local    rabbitmq.ataka.local
-  '';
-
-  # User configurations
-  users.users.spagnologasper = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    description = "spagnologasper";
-    extraGroups = [ "wheel" "disk" "libvirtd" "docker" "audio" "video" "input" "systemd-journal" "networkmanager" "network" ];
-    packages = with pkgs; [ firefox ];
-  };
-
-  # Services
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  services.dbus.enable = true;
-  services.printing.enable = true;
-  
-  # start polkit on login
-  systemd = {
-    user.services.polkit-gnome-authentication-agent-1 = {
-      description = "polkit-gnome-authentication-agent-1";
-      wantedBy = [ "graphical-session.target" ];
-      wants = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
-      serviceConfig = {
-          Type = "simple";
-          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-          Restart = "on-failure";
-          RestartSec = 1;
-          TimeoutStopSec = 10;
-        };
-    };
-  };
-
-  security.polkit.enable = true;
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
+  # Bluetooth
+  hardware.bluetooth.enable = true;
 
   # Nvidia GPU
   hardware.nvidia = {
@@ -145,16 +120,13 @@ in {
 
   virtualisation.docker.enableNvidia = true; # Enable GPU support in container
 
-  services.xserver.videoDrivers = [ "amdgpu" "nvidia"];
+  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
 
   hardware.opengl = {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    extraPackages = with pkgs; [
-        libGLU
-    	libGL
-    ];
+    extraPackages = with pkgs; [ libGLU libGL ];
   };
 
   nixpkgs.config.cudaSupport = true;
@@ -171,7 +143,63 @@ in {
     onShutdown = "shutdown";
   };
 
-  # Fonts
+  ##### Networking settings #####
+  networking.hostName = "nixos";
+  networking.networkmanager.enable = true;
+
+  networking.extraHosts = ''
+    78.46.195.184    grafana.ataka.local    adminer.ataka.local    api.ataka.local    rabbitmq.ataka.local
+  '';
+
+  ##### Services ####
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+  services.xserver = {
+    enable = true;
+    displayManager = {
+      defaultSession = "sway";
+      sddm = { enable = true; };
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    # gtk portal needed to make gtk apps happy
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
+  services.dbus.enable = true;
+  services.printing.enable = true;
+
+  # start polkit on login
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+  security.polkit.enable = true;
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+
+  ##### Fonts #####
   fonts.fonts = with pkgs; [
     fira-code
     fira
@@ -185,91 +213,22 @@ in {
     nerdfonts
   ];
 
-  # Sway and related settings
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-    extraPackages = with pkgs; [
-      swaylock
-      swayidle
-      wl-clipboard
-      wf-recorder
-      mako
-      grim
-      kanshi
-      slurp
-      alacritty
-      dmenu
-    ];
-    extraSessionCommands = ''
-      export SDL_VIDEODRIVER=wayland
-      export QT_QPA_PLATFORM=wayland
-      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-      export _JAVA_AWT_WM_NONREPARENTING=1
-      export MOZ_ENABLE_WAYLAND=1
-    '';
-    extraOptions = [
-      "--unsupported-gpu"
-    ];
-  };
-  programs.waybar.enable = true;
-  qt.platformTheme = "qt5ct";
-
-  services.xserver = {
-    enable = true;
-    displayManager = {
-      defaultSession = "sway";
-      sddm = {
-        enable = true;
-      };
-    };
-  };
-	
-  # Wayland options for brave
-  nixpkgs.config.brave.commandLineArgs = "--enable-features=UseOzonePlatform --ozone-platform=wayland";
-	
-  # Packages
+  ##### System packages #####
   environment.systemPackages = with pkgs; [
-    RStudio-with-my-packages
-    R-with-my-packages
-    R
     alacritty
     dbus-sway-environment
     configure-gtk
     wayland
     xdg-utils
     glib
-    dracula-theme
-    gnome3.adwaita-icon-theme
-    swaylock
-    swayidle
-    grim
-    slurp
-    wl-clipboard
-    bemenu
-    mako
-    wdisplays
     vim
-    neovim
-    jetbrains.datagrip
-    jetbrains.idea-ultimate
-    dbeaver
-    postman
-    gparted
     remmina
     unclutter
     cudatoolkit
-    picom
     nitrogen
-    rofi
     tmux
     pcmanfm
-    filezilla
-    libreoffice
-    zoom-us
     vlc
-    etcher
-    krita
     docker-compose
     virt-manager
     libguestfs
@@ -299,7 +258,6 @@ in {
     lshw
     zsh
     oh-my-zsh
-    starship
     bat
     fzf
     fd
@@ -316,8 +274,6 @@ in {
     ansible
     kops
     pulumi
-    discord
-    spotify
     brave
     bluez
     blueberry
@@ -326,214 +282,298 @@ in {
     brightnessctl
     flameshot
     feh
-    zathura
     neofetch
     cava
     nvtop
     acpi
     wireguard-tools
-    lsd
     htop
     nodejs_18
     ranger
     nmap
     uget
     p7zip
-    black
     zip
     unzip
     jq
-    imagemagick
     vscode
-    wl-mirror
-    etcher
     polkit_gnome
     openvpn
     tshark
     tcpdump
-    xournalpp
     zlib
     glib
     sshpass
     libsForQt5.qtstyleplugin-kvantum
-    ghidra-bin
     anki-bin
     catppuccin-kvantum
     glibc
     qt5.full
-    exiftool
-    shotwell
     file
-    superTuxKart
     btop
     joplin-desktop
-    steghide
     pavucontrol
-    mpv
-    fcrackzip
     rsbkb
-    jetbrains-toolbox
-    gimp
     google-chrome
-    motrix
+    ffmpeg
   ];
 
+  ##### Extra #####
+  # Wayland options for brave
+  nixpkgs.config.brave.commandLineArgs =
+    "--enable-features=UseOzonePlatform --ozone-platform=wayland";
+  programs.zsh.enable = true;
+  qt.platformTheme = "qt5ct";
   nixpkgs.overlays = [ neovimOverlay ];
-  nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" "qtwebkit-5.212.0-alpha4"];
-	
-  environment = {
-     variables = {
-       CUDA_PATH = "${pkgs.cudatoolkit}";
-       # Since setting LD_LIBRARY_PATH system-wide can interfere with other applications, 
-       # I've commented it out, but you can uncomment if you find it necessary.
-       # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
-       EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
-       QT_STYLE_OVERRIDE = "kvantum";
-       QT_QPA_PLATFORMTHEME = "qt5ct";
-       EXTRA_CCFLAGS = "-I/usr/include";
-     };
-
-     sessionVariables = {
-  	LD_LIBRARY_PATH = with pkgs; 
-    	"${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
-    };
-  };
-
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    # gtk portal needed to make gtk apps happy
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+  nixpkgs.config.permittedInsecurePackages =
+    [ "electron-12.2.3" "qtwebkit-5.212.0-alpha4" ];
 
   programs.mtr.enable = true;
-  programs.zsh = {
-     enable = true;
-     # Set the aliases
-     shellAliases = {
-  	md-notes = "cd ~/Documents/md-notes/ && nvim .";
-  	randwall = "feh --bg-scale --randomize ~/pictures/wallpapers/*";
-  	zapiski = "~/Documents/faks_git/FRI-ZAPISKI";
-  	ctf = "cd ~/Documents/ctf/2022";
-  	faks = "cd ~/Nextcloud/faks/3-letnik/2sem";
-  	faks-git = "cd ~/Documents/faks_git";
-  	rm = "rm -i";
-  	night = "brightnessctl s 1%";
-  	nightlock = "swaylock -c 000000";
-  	hsrv = "ssh hsrv";
-  	rs = "export QT_QPA_PLATFORM=xcb; rstudio-bin --no-sandbox &";
-  	rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
-  	nix-update = "nix-channel --update && nix-env -u";
-	ls = "lsd";
-	sus = "systemctl suspend";
-	sur = "systemctl reboot";
-	sup = "power off";
-     };
-     shellInit = ''
-     	export EDITOR='nvim'
-
-	bin_txt() {
-            curl -X PUT --data "$1" https://p.spanskiduh.dev
-        }
-
-        bin_file() {
-            curl -X PUT --data-binary "@$1" https://p.spanskiduh.dev
-        }
-     '';
-     autosuggestions.enable = true;
-     ohMyZsh = {
-       enable = true;
-       theme = "cypher";
-       plugins = [
-          "sudo"
-          "terraform"
-          "systemadmin"
-          "vi-mode"
-	  "z"
-	  "colorize"
-	  "compleat"
-	  "ansible"
-      ];
-    };	
-  };
-
-  programs.tmux = {
-    enable = true;
-    clock24 = true;
-  
-    extraConfig = ''
-      # Alacritty term support
-      set -g default-terminal "tmux-256color"
-      set -sg terminal-overrides ",*:RGB"
-      
-      # Enable vim keys
-      set-window-option -g mode-keys vi
-      bind h select-pane -L
-      bind j select-pane -D
-      bind k select-pane -U
-      bind l select-pane -R
-      bind -r ^ last-window
-      
-      bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'wl-copy'
-      
-      # Remap prefix to Control + a
-      # unbind C-b
-      # set-option -g prefix C-a
-      # bind-key C-a send-prefix
-      
-      # Set mouse
-      set -g mouse on
-      
-      # Increase history size
-      set-option -g history-limit 10000
-      
-      bind-key E run-shell "script -f /tmp/script_log.txt"
-      
-      # Scripts
-      # bind-key -r S run-shell "tmux neww ~/.local/scripts/ssh-connect.sh"
-      # bind-key T run-shell "tmux neww tms"
-      
-      # Colors
-      set-option -g pane-active-border-style fg='#6272a4'
-      set-option -g pane-border-style fg='#ff79c6'
-      # set-option -g status-bg black
-      set-option -g status-fg black
-    '';
-  };
-
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
   };
-
-  ## Bluetooth
-  hardware.bluetooth.enable = true;
-
-  ## Wireguard, skip for now as it does not wanna work, using network manager for now
-  #networking.firewall.allowedUDPPorts = [ 51820 ]; # allow wireguard traffic through firewall
-
-  #networking.wireguard.interfaces = {
-  #  de = {
-  #    ips = [ "10.13.13.3" ];
-  #    listenPort = 51820;
-
-  #    # Note: If you have a separate file for the private key, use the `privateKeyFile` option.
-  #    privateKeyFile = "/etc/nixos/wireguard/de_privkey";
-
-  #    peers = [
-  #      {
-  #        allowedIPs = [ "0.0.0.0/0" ];
-  #        persistentKeepalive = 25;
-  #      }
-  #    ];
-  #  };
-  #};
 
   nix = {
     package = pkgs.nixFlakes;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+  };
+
+  ##### User configurations ######
+  users.users.spagnologasper = {
+    shell = pkgs.zsh;
+    isNormalUser = true;
+    description = "spagnologasper";
+    extraGroups = [
+      "wheel"
+      "disk"
+      "libvirtd"
+      "docker"
+      "audio"
+      "video"
+      "input"
+      "systemd-journal"
+      "networkmanager"
+      "network"
+    ];
+    packages = with pkgs; [ firefox ];
+  };
+
+  ##### Home manager ######
+  home-manager.users.spagnologasper = { pkgs, ... }: {
+    nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" ]; # Temporal
+    home.packages = with pkgs; [
+      # Cursed R
+      RStudio-with-my-packages
+      R-with-my-packages
+      R
+      # Appearence
+      dracula-theme
+      gnome3.adwaita-icon-theme
+      # Development
+      neovim
+      jetbrains.datagrip
+      jetbrains.idea-ultimate
+      jetbrains-toolbox
+      dbeaver
+      postman
+      libreoffice
+      zathura
+      # Tools
+      gparted
+      etcher
+      filezilla
+      xournalpp
+      # Audio video image
+      krita
+      spotify
+      shotwell
+      mpv
+      gimp
+      imagemagick
+      # Voice chat
+      discord
+      zoom-us
+      # Shell extras
+      starship
+      lsd
+      # Learning
+      anki-bin
+      # Games
+      superTuxKart
+      # Security
+      steghide
+      exiftool
+      fcrackzip
+      ghidra-bin
+      # Format tools
+      black
+      nixfmt
+    ];
+    programs.waybar.enable = true;
+
+    home.stateVersion = "23.05";
+
+    programs.git = {
+      enable = true;
+      userName = "Gašper Spagnolo";
+      userEmail = "gasper.spagnolo@outlook.com";
+      signing.key = "9EE5C796920C339839F4EFF646DCDBC936F8414C";
+      signing.signByDefault = true;
+
+      aliases = {
+        ci = "commit";
+        co = "checkout";
+        cp = "cherry-pick";
+        s = "status -uall";
+        br = "branch";
+        aliases = "!git config -l | grep alias | cut -c 7-";
+        hist =
+          "log --pretty=format:'%C(yellow)%h%Creset%C(auto)%d - %s %Cblue[%an]' --graph --date=short --decorate --branches --remotes --tags";
+        blobs =
+          "!git rev-list --objects --all | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | sed -n 's/^blob //p' | sort --numeric-sort --key=2 | cut -c 1-12,41- | $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest";
+        fap = "fetch --all --prune --progress";
+      };
+    };
+
+    programs.zsh = {
+      enable = true;
+      shellAliases = {
+        md-notes = "cd ~/Documents/md-notes/ && nvim .";
+        randwall = "feh --bg-scale --randomize ~/pictures/wallpapers/*";
+        zapiski = "~/Documents/faks_git/FRI-ZAPISKI";
+        ctf = "cd ~/Documents/ctf/2022";
+        faks = "cd ~/Nextcloud/faks/3-letnik/2sem";
+        faks-git = "cd ~/Documents/faks_git";
+        rm = "rm -i";
+        night = "brightnessctl s 1%";
+        nightlock = "swaylock -c 000000";
+        hsrv = "ssh hsrv";
+        rs = "export QT_QPA_PLATFORM=xcb; rstudio-bin --no-sandbox &";
+        rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
+        nix-update = "nix-channel --update && nix-env -u";
+        ls = "lsd";
+        sus = "systemctl suspend";
+        sur = "systemctl reboot";
+        sup = "power off";
+        hg = "history | grep";
+      };
+      initExtra = ''
+            export EDITOR='nvim'
+
+        	bin_txt() {
+                curl -X PUT --data "$1" https://p.spanskiduh.dev
+            }
+
+            bin_file() {
+                curl -X PUT --data-binary "@$1" https://p.spanskiduh.dev
+            }
+
+            # Initialize starship
+            eval "$(starship init zsh)"
+      '';
+      oh-my-zsh = {
+        enable = true;
+        theme = "cypher";
+        plugins = [
+          "sudo"
+          "terraform"
+          "systemadmin"
+          "vi-mode"
+          "z"
+          "colorize"
+          "compleat"
+          "ansible"
+        ];
+      };
+
+      plugins = [{
+        name = "zsh-autosuggestions";
+        src = pkgs.fetchFromGitHub {
+          owner = "zsh-users";
+          repo = "zsh-autosuggestions";
+          rev = "v0.4.0";
+          sha256 = "0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc";
+        };
+      }];
+    };
+
+    programs.tmux = {
+      enable = true;
+      clock24 = true;
+
+      extraConfig = ''
+        # Alacritty term support
+        set -g default-terminal "tmux-256color"
+        set -sg terminal-overrides ",*:RGB"
+
+        # Enable vim keys
+        set-window-option -g mode-keys vi
+        bind h select-pane -L
+        bind j select-pane -D
+        bind k select-pane -U
+        bind l select-pane -R
+        bind -r ^ last-window
+
+        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'wl-copy'
+
+        # Remap prefix to Control + a
+        # unbind C-b
+        # set-option -g prefix C-a
+        # bind-key C-a send-prefix
+
+        # Set mouse
+        set -g mouse on
+
+        # Increase history size
+        set-option -g history-limit 10000
+
+        bind-key E run-shell "script -f /tmp/script_log.txt"
+
+        # Scripts
+        # bind-key -r S run-shell "tmux neww ~/.local/scripts/ssh-connect.sh"
+        # bind-key T run-shell "tmux neww tms"
+
+        # Colors
+        set-option -g pane-active-border-style fg='#6272a4'
+        set-option -g pane-border-style fg='#ff79c6'
+        # set-option -g status-bg black
+        set-option -g status-fg black
+      '';
+    };
+
+  };
+
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    extraPackages = with pkgs; [
+      swaylock
+      swayidle
+      wl-clipboard
+      wf-recorder
+      mako
+      kanshi
+      alacritty
+      dmenu
+      grim
+      slurp
+      bemenu
+      wdisplays
+      rofi
+      wl-mirror
+    ];
+    extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+      export QT_QPA_PLATFORM=wayland
+      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      export MOZ_ENABLE_WAYLAND=1
+    '';
+    extraOptions = [ "--unsupported-gpu" ];
   };
 
 }
