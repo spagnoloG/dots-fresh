@@ -40,13 +40,17 @@ let
     xts
     gridExtra
     shiny
+    shinydashboard
     tidyr
+    tidyverse
   ];
 
   RStudio-with-my-packages =
     pkgs.rstudioWrapper.override { packages = my-R-packages; };
 
   R-with-my-packages = pkgs.rWrapper.override { packages = my-R-packages; };
+
+  python-with-my-packages = pkgs.python3.withPackages (pkgs: with pkgs; [ pyqt5  pyxdg ]);
 
 in {
 
@@ -261,7 +265,7 @@ in {
     bat
     fzf
     fd
-    python3
+    python-with-my-packages
     ruby
     rbenv
     go
@@ -387,6 +391,8 @@ in {
       etcher
       filezilla
       xournalpp
+      pdftk
+      pandoc
       # Audio video image
       krita
       spotify
@@ -542,6 +548,8 @@ in {
         set-option -g pane-border-style fg='#ff79c6'
         # set-option -g status-bg black
         set-option -g status-fg black
+	set -g status-right '#[fg=black,bg=color15] #{cpu_percentage}  %H:%M '
+    	run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
       '';
     };
 
@@ -576,5 +584,24 @@ in {
     extraOptions = [ "--unsupported-gpu" ];
   };
 
+  programs.starship = {
+    enable = true;
+    settings = {
+      aws.style = "bold #ffb86c";
+      cmd_duration.style = "bold #f1fa8c";
+      directory.style = "bold #50fa7b";
+      hostname.style = "bold #ff5555";
+      git_branch.style = "bold #ff79c6";
+      git_status.style = "bold #ff5555";
+      username = {
+        format = "[$user]($style) on ";
+        style_user = "bold #bd93f9";
+      };
+      character = {
+        success_symbol = "[λ](bold #f8f8f2)";
+        error_symbol = "[λ](bold #ff5555)";
+      };
+    };
+  };
 }
 
