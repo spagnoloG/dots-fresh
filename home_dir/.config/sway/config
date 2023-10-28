@@ -84,7 +84,7 @@ output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pin
     # Kill focused window
     bindsym $mod+Shift+q kill
 
-    bindsym $mod+d 				    exec --no-startup-id ~/.config/i3/rofi/bin/launcher
+    bindsym $mod+d 				    exec --no-startup-id "rofi -show drun" 
     bindsym $mod+n 					exec --no-startup-id ~/.config/i3/rofi/bin/network_menu
     bindsym $mod+x 					exec --no-startup-id ~/.config/i3/rofi/bin/powermenu
     bindsym $mod+m 					exec --no-startup-id ~/.config/i3/rofi/bin/mpd

@@ -18,3 +18,9 @@ profile {
 	output 'California Institute of Technology 0x1410 Unknown' enable mode 3072x1920@120Hz scale 1.00 position 1128,3130
     output 'Avolites Ltd ARZOPA -S1 0000000000000' enable mode 1920x1080@60Hz position 1690,2050
 }
+
+
+profile {
+	output 'AU Optronics 0x313D Unknown' enable mode 1920x1080@60Hz scale 1.00 position 1920,1080
+    output 'Avolites Ltd ARZOPA -S1 0000000000000' enable mode 1920x1080@60Hz position 1920,0
+}
