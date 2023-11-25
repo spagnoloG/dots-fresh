@@ -24,3 +24,12 @@ profile {
 	output 'AU Optronics 0x313D Unknown' enable mode 1920x1080@60Hz scale 1.00 position 1920,1080
     output 'Avolites Ltd ARZOPA -S1 0000000000000' enable mode 1920x1080@60Hz position 1920,0
 }
+
+profile {
+    output 'AU Optronics 0x313D Unknown' disable
+    output 'Samsung Electric Company C34H89x H4ZRB05512' enable mode 3440x1440@60Hz
+}
+
+profile {
+    output 'AU Optronics 0x313D Unknown' enable mode 1920x1080@60Hz scale 1.00 
+}
