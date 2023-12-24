@@ -154,8 +154,6 @@
     longitude = 14.5058;
   };
 
-  programs.waybar.enable = true;
-
   programs.vscode = {
     enable = true;
     extensions = with pkgs.vscode-extensions; [
@@ -300,17 +298,139 @@
     '';
   };
 
- wayland.windowManager.sway = {
+  wayland.windowManager.sway = {
     enable = true;
-    config = rec {
+
+    config = {
+      # Set variables
       modifier = "Mod4";
-      # Use kitty as default terminal
-      terminal = "alacritty"; 
-      startup = [
-        # Launch Firefox on start
-        {command = "firefox";}
-      ];
+      terminal = "${pkgs.alacritty}/bin/alacritty";
+
+      # Client styling
+      colors = {
+        focused = {
+          border = "#DA6E89";
+          background = "#DA6E89";
+          text = "#FFFFFF";
+          indicator = "#98C379";
+          childBorder = "#DA6E89";
+        };
+        focusedInactive = {
+          border = "#61AFEF";
+          background = "#61AFEF";
+          text = "#1E222A";
+          indicator = "#98C379";
+          childBorder = "#61AFEF";
+        };
+        unfocused = {
+          border = "#2C3038";
+          background = "#2C3038";
+          text = "#FFFFFF";
+          indicator = "#98C379";
+          childBorder = "#2C3038";
+        };
+        urgent = {
+          border = "#C678DD";
+          background = "#C678DD";
+          text = "#FFFFFF";
+          indicator = "#98C379";
+          childBorder = "#C678DD";
+        };
+        placeholder = {
+          border = "#1E222A";
+          background = "#1E222A";
+          text = "#FFFFFF";
+          indicator = "#98C379";
+          childBorder = "#1E222A";
+        };
+        background = "#1E222A";
+      };
+
+      floating ={
+          modifier = "Mod4";
+          border = 0;
+      };
+
+      window = {
+          border = 0;
+      };
+
+      # Output configuration
+      #output = "* bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill";
+
+      # Keybindings and other configurations
+       keybindings = {
+        "${config.wayland.windowManager.sway.config.modifier}+Return" = "exec ${config.wayland.windowManager.sway.config.terminal}";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+q" = "kill";
+        "${config.wayland.windowManager.sway.config.modifier}+d" = "exec --no-startup-id rofi -show drun";
+        "${config.wayland.windowManager.sway.config.modifier}+n" = "exec --no-startup-id ~/.config/i3/rofi/bin/network_menu";
+        "${config.wayland.windowManager.sway.config.modifier}+x" = "exec --no-startup-id ~/.config/i3/rofi/bin/powermenu";
+        "${config.wayland.windowManager.sway.config.modifier}+m" = "exec --no-startup-id ~/.config/i3/rofi/bin/mpd";
+        "${config.wayland.windowManager.sway.config.modifier}+F2" = "exec --no-startup-id ~/.config/i3/rofi/bin/windows";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+c" = "reload";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+e" = "exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+space" = "floating toggle";
+        "${config.wayland.windowManager.sway.config.modifier}+f" = "fullscreen";
+        "${config.wayland.windowManager.sway.config.modifier}+b" = "splith";
+        "${config.wayland.windowManager.sway.config.modifier}+v" = "splitv";
+        "${config.wayland.windowManager.sway.config.modifier}+s" = "layout stacking";
+        "${config.wayland.windowManager.sway.config.modifier}+w" = "layout tabbed";
+        "${config.wayland.windowManager.sway.config.modifier}+e" = "layout toggle split";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+minus" = "move scratchpad";
+        "${config.wayland.windowManager.sway.config.modifier}+minus" = "scratchpad show";
+        "${config.wayland.windowManager.sway.config.modifier}+r" = "mode 'resize'";
+        "XF86MonBrightnessUp" = "exec brightnessctl s +5%";
+        "XF86MonBrightnessDown" = "exec brightnessctl s 5%-";
+        "XF86AudioRaiseVolume" = "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+        "XF86AudioLowerVolume" = "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        "XF86AudioMute" = "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 0";
+        "XF86AudioMicMute" = "exec --no-startup-id wpctl set-source-mute @DEFAULT_SOURCE@ toggle";
+        "Print" = "exec flameshot gui";
+        "${config.wayland.windowManager.sway.config.modifier}+F1" = "exec swaylock -c 000000";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+b" = "exec brave --enable-features=UseOzonePlatform --ozone-platform=wayland";
+
+        # Movement
+        "${config.wayland.windowManager.sway.config.modifier}+h" = "focus left";
+        "${config.wayland.windowManager.sway.config.modifier}+j" = "focus down";
+        "${config.wayland.windowManager.sway.config.modifier}+k" = "focus up";
+        "${config.wayland.windowManager.sway.config.modifier}+l" = "focus right";
+        "${config.wayland.windowManager.sway.config.modifier}+Left" = "focus left";
+        "${config.wayland.windowManager.sway.config.modifier}+Down" = "focus down";
+        "${config.wayland.windowManager.sway.config.modifier}+Up" = "focus up";
+        "${config.wayland.windowManager.sway.config.modifier}+Right" = "focus right";
+
+        # Workspace management
+        "${config.wayland.windowManager.sway.config.modifier}+1" = "workspace number 1";
+        "${config.wayland.windowManager.sway.config.modifier}+2" = "workspace number 2";
+        "${config.wayland.windowManager.sway.config.modifier}+3" = "workspace number 3";
+        "${config.wayland.windowManager.sway.config.modifier}+4" = "workspace number 4";
+        "${config.wayland.windowManager.sway.config.modifier}+5" = "workspace number 5";
+        "${config.wayland.windowManager.sway.config.modifier}+6" = "workspace number 6";
+        "${config.wayland.windowManager.sway.config.modifier}+7" = "workspace number 7";
+        "${config.wayland.windowManager.sway.config.modifier}+8" = "workspace number 8";
+        "${config.wayland.windowManager.sway.config.modifier}+9" = "workspace number 9";
+        "${config.wayland.windowManager.sway.config.modifier}+0" = "workspace number 0";
+
+        # Moving containers to workspaces
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+1" = "move container to workspace number 1";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+2" = "move container to workspace number 2";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+3" = "move container to workspace number 3";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+4" = "move container to workspace number 4";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+5" = "move container to workspace number 5";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+6" = "move container to workspace number 6";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+7" = "move container to workspace number 7";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+8" = "move container to workspace number 8";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+9" = "move container to workspace number 9";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+0" = "move container to workspace number 0";
+
+         };
+
     };
+
+    extraConfig = ''
+        for_window [class="^.*"] border pixel 1
+        for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
+    '';
   };
 
   programs.starship = {
