@@ -27,13 +27,6 @@ let
     '';
   };
 
-  neovimOverlay = self: super: {
-    neovim = super.neovim.override {
-      viAlias = true;
-      vimAlias = true;
-    };
-  };
-
 in {
 
   imports = [ ./hardware-configuration.nix <home-manager/nixos> ];
@@ -49,10 +42,6 @@ in {
       EXTRA_CCFLAGS = "-I/usr/include";
     };
 
-    sessionVariables = {
-      LD_LIBRARY_PATH = with pkgs;
-        "${stdenv.cc.cc.lib.outPath}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
-    };
   };
 
   ##### General system settings #####
@@ -110,12 +99,21 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
+	
+  programs.sway.enable = true; # needed becouse then the xserver does not recognize sway as option
   services.xserver = {
     enable = true;
-    #displayManager = {
-    #  ly = { enable = true; };
-    #};
+    displayManager = {
+      defaultSession = "sway";
+      lightdm = {
+        enable = true;
+        greeters.enso = {
+          enable = true;
+          theme.name = "Numix";
+          theme.package = pkgs.numix-gtk-theme;
+        };
+      };
+    };
   };
 
   xdg.portal = {
@@ -123,6 +121,7 @@ in {
     wlr.enable = true;
     # gtk portal needed to make gtk apps happy
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = "*";
   };
 
   services.dbus.enable = true;

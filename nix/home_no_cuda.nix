@@ -40,7 +40,6 @@
     dracula-theme
     gnome3.adwaita-icon-theme
     # Development
-    neovim
     dbeaver
     #postman
     libreoffice
@@ -105,6 +104,9 @@
     wdisplays
     rofi
     wl-mirror
+    networkmanagerapplet
+    # Rofi plugins
+    rofi-bluetooth
     # Audo control
     pulsemixer
   ];
@@ -366,7 +368,7 @@
         "${config.wayland.windowManager.sway.config.modifier}+x" =
           "exec --no-startup-id ~/.config/i3/rofi/bin/powermenu";
         "${config.wayland.windowManager.sway.config.modifier}+m" =
-          "exec --no-startup-id ~/.config/i3/rofi/bin/mpd";
+          "exec --no-startup-id rofi-bluetooth";
         "${config.wayland.windowManager.sway.config.modifier}+F2" =
           "exec --no-startup-id ~/.config/i3/rofi/bin/windows";
         "${config.wayland.windowManager.sway.config.modifier}+Shift+c" =
@@ -463,7 +465,14 @@
           "move container to workspace number 9";
         "${config.wayland.windowManager.sway.config.modifier}+Shift+0" =
           "move container to workspace number 0";
-
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+Right" =
+          "move container to output right";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+Left" =
+          "move container to output left";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+Up" =
+          "move container to output up";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+Down" =
+          "move container to output down";
       };
 
     };
@@ -472,6 +481,7 @@
       for_window [class="^.*"] border pixel 1
       for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
       output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill
+      exec_always --no-startup-id nm-applet
     '';
   };
 
@@ -685,6 +695,86 @@
       sidebar-mode = true;
       # Additional configurations go here.
     };
+  };
+
+  programs.zathura = {
+    enable = true;
+
+    options = {
+      font = "Iosevka 16px";
+
+      inputbar-fg = "#161616";
+      inputbar-bg = "#909737";
+
+      statusbar-fg = "#161616";
+      statusbar-bg = "#909737";
+
+      completion-fg = "#161616";
+      completion-bg = "#909737";
+
+      completion-highlight-fg = "#909737";
+      completion-highlight-bg = "#161616";
+
+      recolor-lightcolor = "#161616";
+      recolor-darkcolor = "#ffffff";
+    };
+  };
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    withNodeJs = false;
+    withRuby = false;
+    withPython3 = false;
+    defaultEditor = true;
+    coc.enable = false;
+
+    extraPackages = with pkgs; [
+      # for compiling Treesitter parsers
+      gcc
+
+      # debuggers
+      lldb # comes with lldb-vscode
+
+      # formatters and linters
+      nixfmt
+      rustfmt
+      shfmt
+      stylua
+      codespell
+      statix
+      luajitPackages.luacheck
+      prettierd
+
+      # LSP servers
+      nil
+      rust-analyzer
+      taplo
+      gopls
+      lua
+      shellcheck
+      marksman
+      sumneko-lua-language-server
+      yaml-language-server
+
+      # this includes css-lsp, html-lsp, json-lsp, eslint-lsp
+      nodePackages_latest.vscode-langservers-extracted
+
+      # other utils and plugin dependencies
+      src-cli
+      ripgrep
+      fd
+      catimg
+      sqlite
+      lemmy-help
+      luajitPackages.jsregexp
+      fzf
+      cargo
+      clippy
+      glow
+    ];
   };
 
   programs.alacritty = {
