@@ -114,6 +114,10 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
+    ".config/nvim".source =
+      "${config.home.homeDirectory}/Documents/dots-fresh/home_dir/.config/nvim";
+    ".local/share/rofi/themes/catppuccin-mocha.rasi".source =
+      "${config.home.homeDirectory}/Documents/dots-fresh/home_dir/.local/share/rofi/themes/catppuccin-mocha.rasi";
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
@@ -137,6 +141,7 @@
   #
   #  /etc/profiles/per-user/spagnologasper/etc/profile.d/hm-session-vars.sh
   #
+
   home.sessionVariables = { EDITOR = "nvim"; };
 
   # Let Home Manager install and manage itself.
@@ -249,6 +254,26 @@
       blobs =
         "!git rev-list --objects --all | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | sed -n 's/^blob //p' | sort --numeric-sort --key=2 | cut -c 1-12,41- | $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest";
       fap = "fetch --all --prune --progress";
+      l =
+        "log --graph --pretty='%Cred%h%Creset - %C(bold blue)<%an>%Creset %s%C(yellow)%d%Creset %Cgreen(%cr)' --abbrev-commit --date=relative";
+      fixup = "commit --fixup";
+      pr-diff = "diff upstream/HEAD..";
+      pr-log = "l upstream/HEAD..";
+      pr-edit =
+        "rebase --interactive --autosquash --rerere-autoupdate --rebase-merges --fork-point upstream/HEAD";
+      pr-clean =
+        "-c sequence.editor=true rebase --interactive --autosquash --rerere-autoupdate --empty drop --no-keep-empty --fork-point upstream/HEAD";
+      pr-update = "pull --rebase=merges upstream HEAD";
+    };
+
+    extraConfig = {
+      merge.conflictstyle = "diff3";
+      push.default = "current";
+      pull.rebase = false;
+      init.defaultBranch = "master";
+      url."git@github.com:".insteadOf = "https://github.com/";
+      branch.sort = "-committerdate";
+      tag.sort = "-v:refname";
     };
   };
 

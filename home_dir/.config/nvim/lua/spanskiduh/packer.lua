@@ -5,16 +5,20 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
     -- Packer can manage itself
-    use 'wbthomason/packer.nvim'
+    use {'wbthomason/packer.nvim'}
 
     use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.0',
+        'nvim-telescope/telescope.nvim', tag = '0.1.5',
         requires = { {'nvim-lua/plenary.nvim'} },
-        config = require('spanskiduh.telescope')
+        config = function()
+            require('spanskiduh.telescope')
+        end
     }
 
     use { 'navarasu/onedark.nvim',
-    config = require("spanskiduh.onedark")
+        config = function()
+            require('onedark').setup()
+        end
     }
 
     use ('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
@@ -22,7 +26,9 @@ return require('packer').startup(function(use)
     use ( 'nvim-treesitter/playground' )
 
     use { 'theprimeagen/harpoon' ,
-        config = require('spanskiduh.harpoon')
+        config = function()
+            require('spanskiduh.harpoon')
+        end
     }
 
     use ( 'mbbill/undotree' )
@@ -48,13 +54,17 @@ return require('packer').startup(function(use)
             {'L3MON4D3/LuaSnip'},
             {'rafamadriz/friendly-snippets'},
         },
-        config = require('spanskiduh.lsp')
+        config = function()
+            require('spanskiduh.lsp')
+        end
     }
 
     use {
         'lervag/vimtex',
         -- load config from file
-        config = require('spanskiduh.vimtex')
+        config = function()
+            require('spanskiduh.vimtex')
+        end
     }
 
     -- Snippets
@@ -71,7 +81,9 @@ return require('packer').startup(function(use)
             "nvim-tree/nvim-web-devicons",
             "MunifTanjim/nui.nvim",
         },
-        config = require('spanskiduh.neotree'),
+        config = function()
+            require('spanskiduh.neotree')
+        end
     }
 
     -- Projects detection
@@ -79,6 +91,9 @@ return require('packer').startup(function(use)
 
     -- Git signs
     use { 'lewis6991/gitsigns.nvim',
-        config = require('spanskiduh.gitsigns')}
+        config = function()
+            require('spanskiduh.gitsigns')
+        end
+    }
 
 end)
