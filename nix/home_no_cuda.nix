@@ -135,17 +135,15 @@
   #
   #  /etc/profiles/per-user/spagnologasper/etc/profile.d/hm-session-vars.sh
   #
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
+  home.sessionVariables = { EDITOR = "nvim"; };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" "electron-19.1.9" ]; # Temporal
+  nixpkgs.config.permittedInsecurePackages =
+    [ "electron-12.2.3" "electron-19.1.9" ]; # Temporal
   nixpkgs.config.brave.commandLineArgs =
-  "--enable-features=UseOzonePlatform --ozone-platform=wayland";
-
+    "--enable-features=UseOzonePlatform --ozone-platform=wayland";
 
   services.gammastep = {
     enable = true;
@@ -346,90 +344,134 @@
         background = "#1E222A";
       };
 
-      floating ={
-          modifier = "Mod4";
-          border = 0;
+      floating = {
+        modifier = "Mod4";
+        border = 0;
       };
 
-      window = {
-          border = 0;
-      };
+      window = { border = 0; };
 
       # Output configuration
       #output = "* bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill";
 
       # Keybindings and other configurations
-       keybindings = {
-        "${config.wayland.windowManager.sway.config.modifier}+Return" = "exec ${config.wayland.windowManager.sway.config.terminal}";
+      keybindings = {
+        "${config.wayland.windowManager.sway.config.modifier}+Return" =
+          "exec ${config.wayland.windowManager.sway.config.terminal}";
         "${config.wayland.windowManager.sway.config.modifier}+Shift+q" = "kill";
-        "${config.wayland.windowManager.sway.config.modifier}+d" = "exec --no-startup-id rofi -show drun";
-        "${config.wayland.windowManager.sway.config.modifier}+n" = "exec --no-startup-id ~/.config/i3/rofi/bin/network_menu";
-        "${config.wayland.windowManager.sway.config.modifier}+x" = "exec --no-startup-id ~/.config/i3/rofi/bin/powermenu";
-        "${config.wayland.windowManager.sway.config.modifier}+m" = "exec --no-startup-id ~/.config/i3/rofi/bin/mpd";
-        "${config.wayland.windowManager.sway.config.modifier}+F2" = "exec --no-startup-id ~/.config/i3/rofi/bin/windows";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+c" = "reload";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+e" = "exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+space" = "floating toggle";
+        "${config.wayland.windowManager.sway.config.modifier}+d" =
+          "exec --no-startup-id rofi -show drun";
+        "${config.wayland.windowManager.sway.config.modifier}+n" =
+          "exec --no-startup-id ~/.config/i3/rofi/bin/network_menu";
+        "${config.wayland.windowManager.sway.config.modifier}+x" =
+          "exec --no-startup-id ~/.config/i3/rofi/bin/powermenu";
+        "${config.wayland.windowManager.sway.config.modifier}+m" =
+          "exec --no-startup-id ~/.config/i3/rofi/bin/mpd";
+        "${config.wayland.windowManager.sway.config.modifier}+F2" =
+          "exec --no-startup-id ~/.config/i3/rofi/bin/windows";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+c" =
+          "reload";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+e" =
+          "exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+space" =
+          "floating toggle";
         "${config.wayland.windowManager.sway.config.modifier}+f" = "fullscreen";
         "${config.wayland.windowManager.sway.config.modifier}+b" = "splith";
         "${config.wayland.windowManager.sway.config.modifier}+v" = "splitv";
-        "${config.wayland.windowManager.sway.config.modifier}+s" = "layout stacking";
-        "${config.wayland.windowManager.sway.config.modifier}+w" = "layout tabbed";
-        "${config.wayland.windowManager.sway.config.modifier}+e" = "layout toggle split";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+minus" = "move scratchpad";
-        "${config.wayland.windowManager.sway.config.modifier}+minus" = "scratchpad show";
-        "${config.wayland.windowManager.sway.config.modifier}+r" = "mode 'resize'";
+        "${config.wayland.windowManager.sway.config.modifier}+s" =
+          "layout stacking";
+        "${config.wayland.windowManager.sway.config.modifier}+w" =
+          "layout tabbed";
+        "${config.wayland.windowManager.sway.config.modifier}+e" =
+          "layout toggle split";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+minus" =
+          "move scratchpad";
+        "${config.wayland.windowManager.sway.config.modifier}+minus" =
+          "scratchpad show";
+        "${config.wayland.windowManager.sway.config.modifier}+r" =
+          "mode 'resize'";
         "XF86MonBrightnessUp" = "exec brightnessctl s +5%";
         "XF86MonBrightnessDown" = "exec brightnessctl s 5%-";
-        "XF86AudioRaiseVolume" = "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-        "XF86AudioLowerVolume" = "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-        "XF86AudioMute" = "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 0";
-        "XF86AudioMicMute" = "exec --no-startup-id wpctl set-source-mute @DEFAULT_SOURCE@ toggle";
+        "XF86AudioRaiseVolume" =
+          "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+        "XF86AudioLowerVolume" =
+          "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        "XF86AudioMute" =
+          "exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 0";
+        "XF86AudioMicMute" =
+          "exec --no-startup-id wpctl set-source-mute @DEFAULT_SOURCE@ toggle";
         "Print" = "exec flameshot gui";
-        "${config.wayland.windowManager.sway.config.modifier}+F1" = "exec swaylock -c 000000";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+b" = "exec brave --enable-features=UseOzonePlatform --ozone-platform=wayland";
+        "${config.wayland.windowManager.sway.config.modifier}+F1" =
+          "exec swaylock -c 000000";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+b" =
+          "exec brave --enable-features=UseOzonePlatform --ozone-platform=wayland";
 
         # Movement
         "${config.wayland.windowManager.sway.config.modifier}+h" = "focus left";
         "${config.wayland.windowManager.sway.config.modifier}+j" = "focus down";
         "${config.wayland.windowManager.sway.config.modifier}+k" = "focus up";
-        "${config.wayland.windowManager.sway.config.modifier}+l" = "focus right";
-        "${config.wayland.windowManager.sway.config.modifier}+Left" = "focus left";
-        "${config.wayland.windowManager.sway.config.modifier}+Down" = "focus down";
+        "${config.wayland.windowManager.sway.config.modifier}+l" =
+          "focus right";
+        "${config.wayland.windowManager.sway.config.modifier}+Left" =
+          "focus left";
+        "${config.wayland.windowManager.sway.config.modifier}+Down" =
+          "focus down";
         "${config.wayland.windowManager.sway.config.modifier}+Up" = "focus up";
-        "${config.wayland.windowManager.sway.config.modifier}+Right" = "focus right";
+        "${config.wayland.windowManager.sway.config.modifier}+Right" =
+          "focus right";
 
         # Workspace management
-        "${config.wayland.windowManager.sway.config.modifier}+1" = "workspace number 1";
-        "${config.wayland.windowManager.sway.config.modifier}+2" = "workspace number 2";
-        "${config.wayland.windowManager.sway.config.modifier}+3" = "workspace number 3";
-        "${config.wayland.windowManager.sway.config.modifier}+4" = "workspace number 4";
-        "${config.wayland.windowManager.sway.config.modifier}+5" = "workspace number 5";
-        "${config.wayland.windowManager.sway.config.modifier}+6" = "workspace number 6";
-        "${config.wayland.windowManager.sway.config.modifier}+7" = "workspace number 7";
-        "${config.wayland.windowManager.sway.config.modifier}+8" = "workspace number 8";
-        "${config.wayland.windowManager.sway.config.modifier}+9" = "workspace number 9";
-        "${config.wayland.windowManager.sway.config.modifier}+0" = "workspace number 0";
+        "${config.wayland.windowManager.sway.config.modifier}+1" =
+          "workspace number 1";
+        "${config.wayland.windowManager.sway.config.modifier}+2" =
+          "workspace number 2";
+        "${config.wayland.windowManager.sway.config.modifier}+3" =
+          "workspace number 3";
+        "${config.wayland.windowManager.sway.config.modifier}+4" =
+          "workspace number 4";
+        "${config.wayland.windowManager.sway.config.modifier}+5" =
+          "workspace number 5";
+        "${config.wayland.windowManager.sway.config.modifier}+6" =
+          "workspace number 6";
+        "${config.wayland.windowManager.sway.config.modifier}+7" =
+          "workspace number 7";
+        "${config.wayland.windowManager.sway.config.modifier}+8" =
+          "workspace number 8";
+        "${config.wayland.windowManager.sway.config.modifier}+9" =
+          "workspace number 9";
+        "${config.wayland.windowManager.sway.config.modifier}+0" =
+          "workspace number 0";
 
         # Moving containers to workspaces
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+1" = "move container to workspace number 1";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+2" = "move container to workspace number 2";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+3" = "move container to workspace number 3";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+4" = "move container to workspace number 4";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+5" = "move container to workspace number 5";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+6" = "move container to workspace number 6";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+7" = "move container to workspace number 7";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+8" = "move container to workspace number 8";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+9" = "move container to workspace number 9";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+0" = "move container to workspace number 0";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+1" =
+          "move container to workspace number 1";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+2" =
+          "move container to workspace number 2";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+3" =
+          "move container to workspace number 3";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+4" =
+          "move container to workspace number 4";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+5" =
+          "move container to workspace number 5";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+6" =
+          "move container to workspace number 6";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+7" =
+          "move container to workspace number 7";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+8" =
+          "move container to workspace number 8";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+9" =
+          "move container to workspace number 9";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+0" =
+          "move container to workspace number 0";
 
-         };
+      };
 
     };
 
     extraConfig = ''
-        for_window [class="^.*"] border pixel 1
-        for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
+      for_window [class="^.*"] border pixel 1
+      for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
+      output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill
     '';
   };
 
@@ -452,5 +494,315 @@
       };
     };
   };
-}
 
+  services.kanshi = {
+    enable = true;
+
+    profiles = {
+      profile1 = {
+        outputs = [
+          {
+            criteria = "Dell Inc. DELL P2419HC H565L03";
+            position = "0,0";
+          }
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+        ];
+      };
+
+      profile2 = {
+        outputs = [{
+          criteria = "California Institute of Technology 0x1410 Unknown";
+          mode = "3072x1920@120Hz";
+          scale = 1.0;
+        }];
+      };
+
+      lj_setup = {
+        outputs = [
+          {
+            criteria = "Samsung Electric Company C34H89x H4ZRB05512";
+            mode = "3440x1440@100Hz";
+          }
+          {
+            criteria = "California Institute of Technology 0x1410 Unknown";
+            status = "disable";
+          }
+        ];
+      };
+
+      portable_monitor = {
+        outputs = [
+          {
+            criteria = "California Institute of Technology 0x1410 Unknown";
+            mode = "3072x1920@120Hz";
+            scale = 1.0;
+            position = "1128,3130";
+          }
+          {
+            criteria = "Avolites Ltd ARZOPA -S1 0000000000000";
+            mode = "1920x1080@60Hz";
+            position = "1690,2050";
+          }
+        ];
+      };
+
+      portable_monitor_2 = {
+        outputs = [
+          {
+            criteria = "AU Optronics 0x313D Unknown";
+            mode = "1920x1080@60Hz";
+            scale = 1.0;
+            position = "1920,1080";
+          }
+          {
+            criteria = "Avolites Ltd ARZOPA -S1 0000000000000";
+            mode = "1920x1080@60Hz";
+            position = "1920,0";
+          }
+        ];
+      };
+
+      lj_setup_2 = {
+        outputs = [
+          {
+            criteria = "AU Optronics 0x313D Unknown";
+            status = "disable";
+          }
+          {
+            criteria = "Samsung Electric Company C34H89x H4ZRB05512";
+            mode = "3440x1440@60Hz";
+          }
+        ];
+      };
+
+      profile7 = {
+        outputs = [{
+          criteria = "AU Optronics 0x313D Unknown";
+          mode = "1920x1080@60Hz";
+          scale = 1.0;
+        }];
+      };
+    };
+  };
+
+  services.mako = {
+    enable = true;
+    defaultTimeout = 10000;
+    font = "Iosevka 14";
+    backgroundColor = "#191818";
+    textColor = "#d2d2d2";
+    borderColor = "#474343";
+    borderRadius = 6;
+    height = 700;
+    width = 400;
+    format = ''
+      <b>%s</b>
+      %b'';
+  };
+
+  gtk = {
+    gtk2 = {
+      extraConfig = {
+        "gtk-application-prefer-dark-theme" = true;
+        "gtk-button-images" = true;
+        "gtk-cursor-theme-name" = "breeze_cursors";
+        "gtk-cursor-theme-size" = 24;
+        "gtk-decoration-layout" = "icon:minimize,maximize,close";
+        "gtk-enable-animations" = true;
+        "gtk-font-name" = "Noto Sans, 10";
+        "gtk-icon-theme-name" = "breeze-dark";
+        "gtk-menu-images" = true;
+        "gtk-modules" = "colorreload-gtk-module";
+        "gtk-primary-button-warps-slider" = false;
+        "gtk-theme-name" = "Matcha-dark-azul";
+        "gtk-toolbar-style" = 3;
+        "gtk-xft-dpi" = 147456;
+      };
+    };
+    gtk3 = {
+      extraConfig = {
+        "gtk-application-prefer-dark-theme" = true;
+        "gtk-button-images" = true;
+        "gtk-cursor-theme-name" = "breeze_cursors";
+        "gtk-cursor-theme-size" = 24;
+        "gtk-decoration-layout" = "icon:minimize,maximize,close";
+        "gtk-enable-animations" = true;
+        "gtk-font-name" = "Noto Sans, 10";
+        "gtk-icon-theme-name" = "breeze-dark";
+        "gtk-menu-images" = true;
+        "gtk-modules" = "colorreload-gtk-module";
+        "gtk-primary-button-warps-slider" = false;
+        "gtk-theme-name" = "Matcha-dark-azul";
+        "gtk-toolbar-style" = 3;
+        "gtk-xft-dpi" = 147456;
+      };
+    };
+    gtk4 = {
+      extraConfig = {
+        "gtk-application-prefer-dark-theme" = true;
+        "gtk-button-images" = true;
+        "gtk-cursor-theme-name" = "breeze_cursors";
+        "gtk-cursor-theme-size" = 24;
+        "gtk-decoration-layout" = "icon:minimize,maximize,close";
+        "gtk-enable-animations" = true;
+        "gtk-font-name" = "Noto Sans, 10";
+        "gtk-icon-theme-name" = "breeze-dark";
+        "gtk-menu-images" = true;
+        "gtk-modules" = "colorreload-gtk-module";
+        "gtk-primary-button-warps-slider" = false;
+        "gtk-theme-name" = "Matcha-dark-azul";
+        "gtk-toolbar-style" = 3;
+        "gtk-xft-dpi" = 147456;
+      };
+    };
+  };
+
+  programs.rofi = {
+    enable = true;
+    location = "center";
+    terminal = "alacritty";
+
+    theme = let inherit (config.lib.formats.rasi) mkLiteral;
+    in {
+      " @import" = "catppuccin-mocha";
+      # Additional theme configurations go here.
+    };
+
+    extraConfig = {
+      modi = "run,drun,window";
+      disable-history = true;
+      display-drun = "   Apps ";
+      display-run = "   Run ";
+      display-window = " 﩯  Window";
+      display-network = " 󰤨  Network";
+      drun-display-format = "{icon} {name}";
+      hide-scrollbar = true;
+      icon-theme = "Oranchelo";
+      show-icons = true;
+      sidebar-mode = true;
+      # Additional configurations go here.
+    };
+  };
+
+  programs.alacritty = {
+    enable = true;
+
+    settings = {
+      window = {
+        opacity = 1.0;
+        padding = {
+          x = 5;
+          y = 5;
+        };
+      };
+
+      font = {
+        normal = {
+          family = "Iosevka";
+          style = "Regular";
+        };
+        size = 12;
+      };
+
+      liveConfigReload = true;
+      dynamicPadding = true;
+
+      colors = {
+        primary = {
+          background = "#24273A";
+          foreground = "#CAD3F5";
+          dim_foreground = "#CAD3F5";
+          bright_foreground = "#CAD3F5";
+        };
+
+        cursor = {
+          text = "#24273A";
+          cursor = "#F4DBD6";
+        };
+
+        vi_mode_cursor = {
+          text = "#24273A";
+          cursor = "#B7BDF8";
+        };
+
+        search = {
+          matches = {
+            foreground = "#24273A";
+            background = "#A5ADCB";
+          };
+          focused_match = {
+            foreground = "#24273A";
+            background = "#A6DA95";
+          };
+          footer_bar = {
+            foreground = "#24273A";
+            background = "#A5ADCB";
+          };
+        };
+
+        hints = {
+          start = {
+            foreground = "#24273A";
+            background = "#EED49F";
+          };
+          end = {
+            foreground = "#24273A";
+            background = "#A5ADCB";
+          };
+        };
+
+        selection = {
+          text = "#24273A";
+          background = "#F4DBD6";
+        };
+
+        normal = {
+          black = "#494D64";
+          red = "#ED8796";
+          green = "#A6DA95";
+          yellow = "#EED49F";
+          blue = "#8AADF4";
+          magenta = "#F5BDE6";
+          cyan = "#8BD5CA";
+          white = "#B8C0E0";
+        };
+
+        bright = {
+          black = "#5B6078";
+          red = "#ED8796";
+          green = "#A6DA95";
+          yellow = "#EED49F";
+          blue = "#8AADF4";
+          magenta = "#F5BDE6";
+          cyan = "#8BD5CA";
+          white = "#A5ADCB";
+        };
+
+        dim = {
+          black = "#494D64";
+          red = "#ED8796";
+          green = "#A6DA95";
+          yellow = "#EED49F";
+          blue = "#8AADF4";
+          magenta = "#F5BDE6";
+          cyan = "#8BD5CA";
+          white = "#B8C0E0";
+        };
+
+        indexed_colors = [
+          {
+            index = 16;
+            color = "#F5A97F";
+          }
+          {
+            index = 17;
+            color = "#F4DBD6";
+          }
+        ];
+      };
+    };
+  };
+}

@@ -114,8 +114,7 @@ in {
   services.xserver = {
     enable = true;
     #displayManager = {
-    #  #defaultSession = "sway";
-    #  sddm = { enable = true; };
+    #  ly = { enable = true; };
     #};
   };
 
@@ -167,111 +166,110 @@ in {
 
   ##### System packages #####
   environment.systemPackages = with pkgs; [
-      sway
-      alacritty
-      dbus-sway-environment
-      configure-gtk
-      wayland
-      xdg-utils
-      glib
-      vim
-      remmina
-      unclutter
-      nitrogen
-      tmux
-      pcmanfm
-      vlc
-      docker-compose
-      virt-manager
-      libguestfs
-      libvirt
-      coreutils
-      binutils
-      pciutils
-      dmidecode
-      autoconf
-      gcc
-      gnumake
-      llvm
-      libclang
-      clang
-      cmake
-      libtool
-      libvterm
-      ncurses5
-      stdenv.cc
-      wget
-      curl
-      curl.dev
-      git-lfs
-      man
-      mkpasswd
-      unzip
-      direnv
-      lshw
-      zsh
-      oh-my-zsh
-      bat
-      fzf
-      fd
-      python3
-      ruby
-      rbenv
-      go
-      jdk
-      ansible
-      pulumi
-      brave
-      bluez
-      blueberry
-      git
-      stow
-      brightnessctl
-      flameshot
-      feh
-      neofetch
-      cava
-      nvtop
-      acpi
-      wireguard-tools
-      htop
-      nodejs_18
-      ranger
-      nmap
-      uget
-      p7zip
-      zip
-      unzip
-      jq
-      polkit_gnome
-      openvpn
-      tshark
-      tcpdump
-      zlib
-      glib
-      sshpass
-      anki-bin
-      catppuccin-kvantum
-      glibc
-      file
-      btop
-      joplin-desktop
-      pavucontrol
-      rsbkb
-      google-chrome
-      ffmpeg
-      parallel
-      ripgrep
-      nload
-      wirelesstools
+    sway
+    alacritty
+    dbus-sway-environment
+    configure-gtk
+    wayland
+    xdg-utils
+    glib
+    vim
+    remmina
+    unclutter
+    nitrogen
+    tmux
+    pcmanfm
+    vlc
+    docker-compose
+    virt-manager
+    libguestfs
+    libvirt
+    coreutils
+    binutils
+    pciutils
+    dmidecode
+    autoconf
+    gcc
+    gnumake
+    llvm
+    libclang
+    clang
+    cmake
+    libtool
+    libvterm
+    ncurses5
+    stdenv.cc
+    wget
+    curl
+    curl.dev
+    git-lfs
+    man
+    mkpasswd
+    unzip
+    direnv
+    lshw
+    zsh
+    oh-my-zsh
+    bat
+    fzf
+    fd
+    python3
+    ruby
+    rbenv
+    go
+    jdk
+    ansible
+    pulumi
+    brave
+    bluez
+    blueberry
+    git
+    stow
+    brightnessctl
+    flameshot
+    feh
+    neofetch
+    cava
+    nvtop
+    acpi
+    wireguard-tools
+    htop
+    nodejs_18
+    ranger
+    nmap
+    uget
+    p7zip
+    zip
+    unzip
+    jq
+    polkit_gnome
+    openvpn
+    tshark
+    tcpdump
+    zlib
+    glib
+    sshpass
+    anki-bin
+    catppuccin-kvantum
+    glibc
+    file
+    btop
+    joplin-desktop
+    pavucontrol
+    rsbkb
+    google-chrome
+    ffmpeg
+    parallel
+    ripgrep
+    nload
+    wirelesstools
   ];
 
   ##### Extra #####
   # Wayland options for brave
   programs.zsh.enable = true;
   qt.platformTheme = "qt5ct";
-  nixpkgs.config.permittedInsecurePackages =
-    [ "electron-12.2.3" ];
+  nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" ];
 
   programs.mtr.enable = true;
   programs.gnupg.agent = {
