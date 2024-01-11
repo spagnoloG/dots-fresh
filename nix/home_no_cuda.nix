@@ -1,6 +1,18 @@
 { config, pkgs, ... }:
 
-{
+let
+  dbus-sway-environment = pkgs.writeTextFile {
+    name = "dbus-sway-environment";
+    destination = "/bin/dbus-sway-environment";
+    executable = true;
+    text = ''
+      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+      systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+      systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+    '';
+  };
+
+in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "spagnologasper";
@@ -35,6 +47,7 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
     sway
+    dbus-sway-environment
     R
     # Appearence
     dracula-theme
@@ -53,8 +66,9 @@
     filezilla
     xournalpp
     pdftk
+    reuse
     pandoc
-    #texlive.combined.scheme-full
+    texlive.combined.scheme-full
     # Database connection tools
     mysql
     #mongodb .. install it using nix-shell as it build itself each time (time consuming)
@@ -109,6 +123,20 @@
     rofi-bluetooth
     # Audo control
     pulsemixer
+    nextcloud-client
+    # Mailing
+    thunderbird-bin
+    # Flameshot
+    (writeShellScriptBin "flameshot-sway" ''
+      export QT_STYLE_OVERRIDE=Fusion
+      export XDG_CURRENT_DESKTOP=sway
+      export XDG_SESSION_DESKTOP=sway
+      export QT_QPA_PLATFORM=wayland
+      exec ${flameshot}/bin/flameshot
+    '')
+    # hacking tools
+    gdb
+    gef
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -157,6 +185,8 @@
     provider = "manual";
     latitude = 46.0569;
     longitude = 14.5058;
+    tray = true;
+    temperature.night = 4500;
   };
 
   programs.vscode = {
@@ -269,7 +299,7 @@
     extraConfig = {
       merge.conflictstyle = "diff3";
       push.default = "current";
-      pull.rebase = false;
+      pull.rebase = true;
       init.defaultBranch = "master";
       url."git@github.com:".insteadOf = "https://github.com/";
       branch.sort = "-committerdate";
@@ -377,9 +407,6 @@
       };
 
       window = { border = 0; };
-
-      # Output configuration
-      #output = "* bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill";
 
       # Keybindings and other configurations
       keybindings = {
@@ -505,7 +532,7 @@
     extraConfig = ''
       for_window [class="^.*"] border pixel 1
       for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
-      output * bg /home/spagnologasper/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill
+      output * bg ${config.home.homeDirectory}/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill
       exec_always --no-startup-id nm-applet
     '';
   };
@@ -611,6 +638,24 @@
             mode = "3440x1440@60Hz";
           }
         ];
+      };
+
+      hs_1 = {
+        outputs = [
+          {
+            criteria = "AU Optronics 0x313D Unknown";
+            #mode = "1920x1080@60Hz";
+            #scale = 1.0;
+            #position = "0,1080";
+            status = "disable";
+          }
+          {
+            criteria = "Samsung Electric Company S24D330 0x00005B31";
+            mode = "1920x1080@60Hz";
+            position = "0,0";
+          }
+        ];
+
       };
 
       profile7 = {

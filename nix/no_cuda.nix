@@ -86,10 +86,6 @@ in {
   networking.networkmanager.enable = true;
 
   networking.extraHosts = ''
-    192.168.88.127	nextcloud.hsrv 
-    192.168.88.59 	jellyfin.hsrv 
-    192.168.88.54 	photoprism.hsrv 
-    192.168.88.31 	transmission.hsrv 
   '';
 
   ##### Services ####
@@ -274,6 +270,13 @@ in {
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
+  };
+
+  # Steam cannot be installed using home-manager, so let it be global for now
+  programs.steam = {
+  	enable = true;
+  	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
   nix = {
