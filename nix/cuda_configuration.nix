@@ -59,24 +59,13 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelModules = [ "kvm-intel" "wireguard" ];
   boot.blacklistedKernelModules = [ "nouveau" ];
-
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [ libGLU libGL ];
-  };
-
-  # CUDA
-  nixpkgs.config.cudaSupport = true;
-  services.xserver.videoDrivers = ["amdgpu" "nvidia" ];
   boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
 
+  ### CUDA  ###
+  nixpkgs.config.cudaSupport = true;
+  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
+  virtualisation.docker.enableNvidia = true; # Enable GPU support in container
 
-  # Nvidia GPU
   hardware.nvidia = {
 
     # Modesetting is required.
@@ -105,7 +94,17 @@ in {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  # Bluetooth
+  hardware.bluetooth.enable = true;
 
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    extraPackages = with pkgs; [ libGLU libGL ];
+  };
+
+  ### KVM ###
   services.qemuGuest.enable = true;
   virtualisation.docker.enable = true;
 
@@ -123,8 +122,7 @@ in {
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  networking.extraHosts = ''
-  '';
+  networking.extraHosts = "";
 
   ##### Services ####
   services.pipewire = {
@@ -133,12 +131,24 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-	
-  programs.sway.enable = true; # needed becouse then the xserver does not recognize sway as option
+
+  #programs.sway = {
+  #  enable = true;
+  #  wrapperFeatures.gtk = true;
+  #  extraSessionCommands = ''
+  #    export SDL_VIDEODRIVER=wayland
+  #    export QT_QPA_PLATFORM=wayland
+  #    export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+  #    export _JAVA_AWT_WM_NONREPARENTING=1
+  #    export MOZ_ENABLE_WAYLAND=1
+  #  '';
+  #  extraOptions = [ "--unsupported-gpu" ];
+  #};
+
   services.xserver = {
     enable = true;
     displayManager = {
-      defaultSession = "sway";
+      #defaultSession = "sway";
       lightdm = {
         enable = true;
         greeters.enso = {
@@ -197,13 +207,26 @@ in {
     nerdfonts
   ];
 
+  environment = {
+    # Setup global proxy
+    #variables = {
+    #   http_proxy = "http://proxy.site";
+    #   https_proxy = "https://proxy.site";
+    #};
+    sessionVariables = {
+      LD_LIBRARY_PATH = with pkgs;
+        "${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
+    };
+
+  };
+
   ##### System packages #####
   environment.systemPackages = with pkgs; [
     linuxPackages.nvidia_x11
     cudatoolkit
-    sway
+    #sway
     alacritty
-    dbus-sway-environment
+    #dbus-sway-environment
     configure-gtk
     wayland
     xdg-utils
@@ -314,9 +337,11 @@ in {
 
   # Steam cannot be installed using home-manager, so let it be global for now
   programs.steam = {
-  	enable = true;
-  	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    enable = true;
+    remotePlay.openFirewall =
+      true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall =
+      true; # Open ports in the firewall for Source Dedicated Server
   };
 
   nix = {

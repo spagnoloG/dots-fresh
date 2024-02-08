@@ -7,6 +7,9 @@ let
     executable = true;
     text = ''
       dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+      systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+      exec hash dbus-update-activation-environment 2>/dev/null && \
+           dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
       systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
       systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
     '';
@@ -46,7 +49,6 @@ in {
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
-    sway
     dbus-sway-environment
     R
     # Appearence
@@ -63,6 +65,7 @@ in {
     # Tools
     gparted
     etcher
+    transmission-gtk
     filezilla
     xournalpp
     pdftk
@@ -86,6 +89,7 @@ in {
     # Voice chat
     discord
     zoom-us
+    slack
     # Shell extras
     starship
     lsd
@@ -127,6 +131,9 @@ in {
     # Mailing
     thunderbird-bin
     # Flameshot
+    xdg-desktop-portal
+    xdg-desktop-portal-wlr
+    grim
     (writeShellScriptBin "flameshot-sway" ''
       export QT_STYLE_OVERRIDE=Fusion
       export XDG_CURRENT_DESKTOP=sway
@@ -141,6 +148,11 @@ in {
     nload
     # Disk usage
     ncdu
+    # Compression
+    pigz
+    p7zip
+    parallel
+    ddrescue
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -173,6 +185,13 @@ in {
   #
   #  /etc/profiles/per-user/spagnologasper/etc/profile.d/hm-session-vars.sh
   #
+
+  xdg.configFile."xdg-desktop-portal/sway-portals.conf".text = ''
+    [preferred]
+    default=gtk
+    org.freedesktop.impl.portal.Screencast=wlr
+    org.freedesktop.impl.portal.Screenshot=wlr
+  '';
 
   home.sessionVariables = { EDITOR = "nvim"; };
 
@@ -521,14 +540,24 @@ in {
           "move container to workspace number 9";
         "${config.wayland.windowManager.sway.config.modifier}+Shift+0" =
           "move container to workspace number 0";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+Right" =
-          "move container to output right";
+
+        # Move windows
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+h" =
+          "move left";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+j" =
+          "move down";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+k" =
+          "move up";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+l" =
+          "move right";
         "${config.wayland.windowManager.sway.config.modifier}+Shift+Left" =
-          "move container to output left";
-        "${config.wayland.windowManager.sway.config.modifier}+Shift+Up" =
-          "move container to output up";
+          "move left";
         "${config.wayland.windowManager.sway.config.modifier}+Shift+Down" =
-          "move container to output down";
+          "move down";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+Up" =
+          "move up";
+        "${config.wayland.windowManager.sway.config.modifier}+Shift+Right" =
+          "move right";
       };
 
     };
@@ -536,9 +565,22 @@ in {
     extraConfig = ''
       for_window [class="^.*"] border pixel 1
       for_window [class="feh"] floating enable, border none resize set 1600 1000, move position center
+      for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
+
       output * bg ${config.home.homeDirectory}/Documents/dots-fresh/wallpapers/.wallpapers/pinky.png fill
       exec_always --no-startup-id nm-applet
     '';
+
+    extraOptions = [ "--unsupported-gpu" ];
+
+    extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+      export QT_QPA_PLATFORM=wayland
+      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      export MOZ_ENABLE_WAYLAND=1
+    '';
+
   };
 
   programs.starship = {
@@ -578,7 +620,7 @@ in {
         ];
       };
 
-      profile2 = {
+      yoga = {
         outputs = [{
           criteria = "California Institute of Technology 0x1410 Unknown";
           mode = "3072x1920@120Hz";
@@ -660,6 +702,20 @@ in {
           }
         ];
 
+      };
+
+      hs_22 = {
+        outputs = [
+          {
+            criteria =
+              "Philips Consumer Electronics Company PHL27M1N3200Z UK02329015881";
+            mode = "1920x1080@144";
+          }
+          {
+            criteria = "California Institute of Technology 0x1410 Unknown";
+            status = "disable";
+          }
+        ];
       };
 
       profile7 = {
