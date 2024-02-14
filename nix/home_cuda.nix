@@ -116,7 +116,6 @@ in {
     kanshi
     alacritty
     dmenu
-    grim
     slurp
     bemenu
     wdisplays
@@ -134,13 +133,14 @@ in {
     xdg-desktop-portal
     xdg-desktop-portal-wlr
     grim
-    (writeShellScriptBin "flameshot-sway" ''
-      export QT_STYLE_OVERRIDE=Fusion
-      export XDG_CURRENT_DESKTOP=sway
-      export XDG_SESSION_DESKTOP=sway
-      export QT_QPA_PLATFORM=wayland
-      exec ${flameshot}/bin/flameshot
-    '')
+    flameshot
+    #(writeShellScriptBin "flameshot-sway" ''
+    #  export QT_STYLE_OVERRIDE=Fusion
+    #  export XDG_CURRENT_DESKTOP=sway
+    #  export XDG_SESSION_DESKTOP=sway
+    #  export QT_QPA_PLATFORM=wayland
+    #  exec ${flameshot}/bin/flameshot
+    #'')
     # hacking tools
     gdb
     gef
@@ -153,6 +153,8 @@ in {
     p7zip
     parallel
     ddrescue
+    # colored output in terminal
+    grc
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -222,6 +224,11 @@ in {
     ];
   };
 
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.zsh = {
     enable = true;
     shellAliases = {
@@ -243,6 +250,7 @@ in {
       sur = "systemctl reboot";
       sup = "power off";
       hg = "history | grep";
+      ss = "grc ss";
     };
     initExtra = ''
       export EDITOR='nvim'
@@ -258,9 +266,11 @@ in {
       # Initialize starship
       eval "$(starship init zsh)"
 
+
       # Gpg tty
       GPG_TTY=$(tty)
       export GPG_TTY
+
     '';
     oh-my-zsh = {
       enable = true;
@@ -277,15 +287,36 @@ in {
       ];
     };
 
-    plugins = [{
-      name = "zsh-autosuggestions";
-      src = pkgs.fetchFromGitHub {
-        owner = "zsh-users";
-        repo = "zsh-autosuggestions";
-        rev = "v0.4.0";
-        sha256 = "0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc";
-      };
-    }];
+    plugins = [
+      {
+        name = "zsh-autosuggestions";
+        src = pkgs.fetchFromGitHub {
+          owner = "zsh-users";
+          repo = "zsh-autosuggestions";
+          rev = "v0.4.0";
+          sha256 = "0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc";
+        };
+      }
+      {
+        name = "fzf-tab";
+        src = pkgs.fetchFromGitHub {
+          owner = "Aloxaf";
+          repo = "fzf-tab";
+          rev = "b06e7574577cd729c629419a62029d31d0565a7a";
+          sha256 = "sha256-ilUavAIWmLiMh2PumtErMCpOcR71ZMlQkKhVOTDdHZw=";
+        };
+      }
+      {
+        name = "warhol";
+        src = pkgs.fetchFromGitHub {
+          owner = "unixorn";
+          repo = "warhol.plugin.zsh";
+          rev = "49a2fb6789179c789f54b95221c91fdc1bd5f804";
+          sha256 = "sha256-cL7qfgoJseS/epWPyzUy0Ul4GMtyPzYkZ5tsHbRjcRI=";
+        };
+      }
+    ];
+
   };
 
   programs.git = {
@@ -373,6 +404,7 @@ in {
       set-option -g status-fg black
       set -g status-right '#[fg=black,bg=color15] #{cpu_percentage}  %H:%M '
       run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
+      run-shell ${pkgs.tmuxPlugins.tmux-fzf}/share/tmux-plugins/tmux-fzf/main.tmux
     '';
   };
 
@@ -907,6 +939,125 @@ in {
     ];
   };
 
+  #programs.alacritty = {
+  #  enable = true;
+
+  #  settings = {
+  #    window = {
+  #      opacity = 1.0;
+  #      padding = {
+  #        x = 5;
+  #        y = 5;
+  #      };
+  #    };
+
+  #    font = {
+  #      normal = {
+  #        family = "Iosevka";
+  #        style = "Regular";
+  #      };
+  #      size = 12;
+  #    };
+
+  #    liveConfigReload = true;
+  #    dynamicPadding = true;
+
+  #    colors = {
+  #      primary = {
+  #        background = "#24273A";
+  #        foreground = "#CAD3F5";
+  #        dim_foreground = "#CAD3F5";
+  #        bright_foreground = "#CAD3F5";
+  #      };
+
+  #      cursor = {
+  #        text = "#24273A";
+  #        cursor = "#F4DBD6";
+  #      };
+
+  #      vi_mode_cursor = {
+  #        text = "#24273A";
+  #        cursor = "#B7BDF8";
+  #      };
+
+  #      search = {
+  #        matches = {
+  #          foreground = "#24273A";
+  #          background = "#A5ADCB";
+  #        };
+  #        focused_match = {
+  #          foreground = "#24273A";
+  #          background = "#A6DA95";
+  #        };
+  #        footer_bar = {
+  #          foreground = "#24273A";
+  #          background = "#A5ADCB";
+  #        };
+  #      };
+
+  #      hints = {
+  #        start = {
+  #          foreground = "#24273A";
+  #          background = "#EED49F";
+  #        };
+  #        end = {
+  #          foreground = "#24273A";
+  #          background = "#A5ADCB";
+  #        };
+  #      };
+
+  #      selection = {
+  #        text = "#24273A";
+  #        background = "#F4DBD6";
+  #      };
+
+  #      normal = {
+  #        black = "#494D64";
+  #        red = "#ED8796";
+  #        green = "#A6DA95";
+  #        yellow = "#EED49F";
+  #        blue = "#8AADF4";
+  #        magenta = "#F5BDE6";
+  #        cyan = "#8BD5CA";
+  #        white = "#B8C0E0";
+  #      };
+
+  #      bright = {
+  #        black = "#5B6078";
+  #        red = "#ED8796";
+  #        green = "#A6DA95";
+  #        yellow = "#EED49F";
+  #        blue = "#8AADF4";
+  #        magenta = "#F5BDE6";
+  #        cyan = "#8BD5CA";
+  #        white = "#A5ADCB";
+  #      };
+
+  #      dim = {
+  #        black = "#494D64";
+  #        red = "#ED8796";
+  #        green = "#A6DA95";
+  #        yellow = "#EED49F";
+  #        blue = "#8AADF4";
+  #        magenta = "#F5BDE6";
+  #        cyan = "#8BD5CA";
+  #        white = "#B8C0E0";
+  #      };
+
+  #      indexed_colors = [
+  #        {
+  #          index = 16;
+  #          color = "#F5A97F";
+  #        }
+  #        {
+  #          index = 17;
+  #          color = "#F4DBD6";
+  #        }
+  #      ];
+  #    };
+  #  };
+  #};
+
   programs.alacritty = {
     enable = true;
 
@@ -932,97 +1083,99 @@ in {
 
       colors = {
         primary = {
-          background = "#24273A";
-          foreground = "#CAD3F5";
-          dim_foreground = "#CAD3F5";
-          bright_foreground = "#CAD3F5";
+          background = "#1c1e26";
+          foreground = "#e0e0e0";
+          dim_foreground = "#e0e0e0";
+          bright_foreground = "#e0e0e0";
         };
 
         cursor = {
-          text = "#24273A";
-          cursor = "#F4DBD6";
+          text = "#1c1e26";
+          cursor = "#e95678";
         };
 
         vi_mode_cursor = {
-          text = "#24273A";
-          cursor = "#B7BDF8";
+          text = "#1c1e26";
+          cursor = "#26bbd9"; # Using Horizon Dark blue for visual distinction
         };
 
         search = {
           matches = {
-            foreground = "#24273A";
-            background = "#A5ADCB";
+            foreground = "#1c1e26";
+            background = "#fab795"; # Horizon Dark yellow for contrast
           };
           focused_match = {
-            foreground = "#24273A";
-            background = "#A6DA95";
+            foreground = "#1c1e26";
+            background = "#29d398"; # Horizon Dark green for visibility
           };
           footer_bar = {
-            foreground = "#24273A";
-            background = "#A5ADCB";
+            foreground = "#1c1e26";
+            background = "#fab795"; # Horizon Dark yellow for consistency
           };
         };
 
         hints = {
           start = {
-            foreground = "#24273A";
-            background = "#EED49F";
+            foreground = "#1c1e26";
+            background = "#ee64ac"; # Horizon Dark magenta for visibility
           };
           end = {
-            foreground = "#24273A";
-            background = "#A5ADCB";
+            foreground = "#1c1e26";
+            background = "#26bbd9"; # Horizon Dark blue for consistency
           };
         };
 
         selection = {
-          text = "#24273A";
-          background = "#F4DBD6";
+          text = "#1c1e26";
+          background = "#e95678"; # Horizon Dark red for visibility
         };
 
         normal = {
-          black = "#494D64";
-          red = "#ED8796";
-          green = "#A6DA95";
-          yellow = "#EED49F";
-          blue = "#8AADF4";
-          magenta = "#F5BDE6";
-          cyan = "#8BD5CA";
-          white = "#B8C0E0";
+          black = "#16161c";
+          red = "#e95678";
+          green = "#29d398";
+          yellow = "#fab795";
+          blue = "#26bbd9";
+          magenta = "#ee64ac";
+          cyan = "#59e1e3";
+          white = "#d5d8da";
         };
 
         bright = {
-          black = "#5B6078";
-          red = "#ED8796";
-          green = "#A6DA95";
-          yellow = "#EED49F";
-          blue = "#8AADF4";
-          magenta = "#F5BDE6";
-          cyan = "#8BD5CA";
-          white = "#A5ADCB";
+          black = "#5b5858";
+          red = "#ec6a88";
+          green = "#3fdaa4";
+          yellow = "#fbc3a7";
+          blue = "#3fc4de";
+          magenta = "#f075b5";
+          cyan = "#6be4e6";
+          white = "#d5d8da";
         };
 
         dim = {
-          black = "#494D64";
-          red = "#ED8796";
-          green = "#A6DA95";
-          yellow = "#EED49F";
-          blue = "#8AADF4";
-          magenta = "#F5BDE6";
-          cyan = "#8BD5CA";
-          white = "#B8C0E0";
+          black = "#16161c";
+          red = "#e95678";
+          green = "#29d398";
+          yellow = "#fab795";
+          blue = "#26bbd9";
+          magenta = "#ee64ac";
+          cyan = "#59e1e3";
+          white = "#d5d8da";
         };
 
         indexed_colors = [
           {
             index = 16;
-            color = "#F5A97F";
+            color = "#f5a97f";
           }
           {
             index = 17;
-            color = "#F4DBD6";
+            color = "#f4dbd6";
           }
         ];
       };
+
     };
   };
+
 }

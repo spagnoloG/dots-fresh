@@ -2,17 +2,6 @@
 
 ##### Variable definitions #####
 let
-  dbus-sway-environment = pkgs.writeTextFile {
-    name = "dbus-sway-environment";
-    destination = "/bin/dbus-sway-environment";
-    executable = true;
-    text = ''
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-      systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-      systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-    '';
-  };
-
   configure-gtk = pkgs.writeTextFile {
     name = "configure-gtk";
     destination = "/bin/configure-gtk";
@@ -104,6 +93,9 @@ in {
     extraPackages = with pkgs; [ libGLU libGL ];
   };
 
+  # Enable UDisks2 service for automounting
+  services.udisks2.enable = true;
+
   ### KVM ###
   services.qemuGuest.enable = true;
   virtualisation.docker.enable = true;
@@ -147,17 +139,18 @@ in {
 
   services.xserver = {
     enable = true;
-    displayManager = {
-      #defaultSession = "sway";
-      lightdm = {
-        enable = true;
-        greeters.enso = {
-          enable = true;
-          theme.name = "Numix";
-          theme.package = pkgs.numix-gtk-theme;
-        };
-      };
-    };
+    # I dont need display manager
+    #displayManager = {
+    #  #defaultSession = "sway";
+    #  lightdm = {
+    #    enable = true;
+    #    greeters.enso = {
+    #      enable = true;
+    #      theme.name = "Numix";
+    #      theme.package = pkgs.numix-gtk-theme;
+    #    };
+    #  };
+    #};
   };
 
   xdg.portal = {
@@ -224,9 +217,7 @@ in {
   environment.systemPackages = with pkgs; [
     linuxPackages.nvidia_x11
     cudatoolkit
-    #sway
     alacritty
-    #dbus-sway-environment
     configure-gtk
     wayland
     xdg-utils
@@ -321,6 +312,7 @@ in {
     ripgrep
     nload
     wirelesstools
+    udisks2
   ];
 
   ##### Extra #####
