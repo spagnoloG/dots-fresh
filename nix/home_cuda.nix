@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   dbus-sway-environment = pkgs.writeTextFile {
@@ -62,6 +62,7 @@ in {
     okular
     conda
     vscode
+    joplin-desktop
     # Tools
     gparted
     etcher
@@ -194,6 +195,7 @@ in {
     org.freedesktop.impl.portal.Screencast=wlr
     org.freedesktop.impl.portal.Screenshot=wlr
   '';
+    
 
   home.sessionVariables = { EDITOR = "nvim"; };
 
@@ -391,8 +393,6 @@ in {
       # Increase history size
       set-option -g history-limit 10000
 
-      bind-key E run-shell "script -f /tmp/script_log.txt"
-
       # Scripts
       # bind-key -r S run-shell "tmux neww ~/.local/scripts/ssh-connect.sh"
       # bind-key T run-shell "tmux neww tms"
@@ -402,7 +402,7 @@ in {
       set-option -g pane-border-style fg='#ff79c6'
       # set-option -g status-bg black
       set-option -g status-fg black
-      set -g status-right '#[fg=black,bg=color15] #{cpu_percentage}  %H:%M '
+      set -g status-right '#[fg=black,bg=#e95678] #{cpu_percentage}  %H:%M '
       run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
       run-shell ${pkgs.tmuxPlugins.tmux-fzf}/share/tmux-plugins/tmux-fzf/main.tmux
     '';
