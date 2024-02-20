@@ -2,19 +2,8 @@
 
 ##### Variable definitions #####
 let
-  configure-gtk = pkgs.writeTextFile {
-    name = "configure-gtk";
-    destination = "/bin/configure-gtk";
-    executable = true;
-    text = let
-      schema = pkgs.gsettings-desktop-schemas;
-      datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-    in ''
-      export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
-      gnome_schema=org.gnome.desktop.interface
-      gsettings set $gnome_schema gtk-theme 'Dracula'
-    '';
-  };
+
+  burekVariable = "burek";
 
 in {
 
@@ -23,14 +12,19 @@ in {
   ##### Environment Variables #####
   environment = {
     variables = {
-      # Since setting LD_LIBRARY_PATH system-wide can interfere with other applications, 
-      # I've commented it out, but you can uncomment if you find it necessary.
-      # LD_LIBRARY_PATH = "${pkgs.linuxPackages.nvidia_x11}/lib";
+      # PROXY SETTINGS
+      #   http_proxy = "http://proxy.site";
+      #   https_proxy = "https://proxy.site";
       EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
       CUDA_PATH = "${pkgs.cudatoolkit}";
       QT_STYLE_OVERRIDE = "kvantum";
       QT_QPA_PLATFORMTHEME = "qt5ct";
       EXTRA_CCFLAGS = "-I/usr/include";
+    };
+
+    sessionVariables = {
+      LD_LIBRARY_PATH = with pkgs;
+        "${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
     };
 
   };
@@ -39,7 +33,7 @@ in {
   time.timeZone = "Europe/Ljubljana";
   i18n.defaultLocale = "en_US.UTF-8";
   system.stateVersion = "23.11";
-  system.autoUpgrade.enable = true;
+  system.autoUpgrade.enable = false;
   system.autoUpgrade.allowReboot = false;
   nixpkgs.config.allowUnfree = true;
 
@@ -124,34 +118,7 @@ in {
     pulse.enable = true;
   };
 
-  #programs.sway = {
-  #  enable = true;
-  #  wrapperFeatures.gtk = true;
-  #  extraSessionCommands = ''
-  #    export SDL_VIDEODRIVER=wayland
-  #    export QT_QPA_PLATFORM=wayland
-  #    export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-  #    export _JAVA_AWT_WM_NONREPARENTING=1
-  #    export MOZ_ENABLE_WAYLAND=1
-  #  '';
-  #  extraOptions = [ "--unsupported-gpu" ];
-  #};
-
-  services.xserver = {
-    enable = true;
-    # I dont need display manager
-    #displayManager = {
-    #  #defaultSession = "sway";
-    #  lightdm = {
-    #    enable = true;
-    #    greeters.enso = {
-    #      enable = true;
-    #      theme.name = "Numix";
-    #      theme.package = pkgs.numix-gtk-theme;
-    #    };
-    #  };
-    #};
-  };
+  services.xserver = { enable = true; };
 
   xdg.portal = {
     enable = true;
@@ -186,49 +153,16 @@ in {
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
-  ##### Fonts #####
-  fonts.packages = with pkgs; [
-    fira-code
-    fira
-    cooper-hewitt
-    ibm-plex
-    jetbrains-mono
-    iosevka
-    spleen
-    fira-code-symbols
-    powerline-fonts
-    nerdfonts
-  ];
-
-  environment = {
-    # Setup global proxy
-    #variables = {
-    #   http_proxy = "http://proxy.site";
-    #   https_proxy = "https://proxy.site";
-    #};
-    sessionVariables = {
-      LD_LIBRARY_PATH = with pkgs;
-        "${stdenv.cc.cc.lib.outPath}/lib:${linuxPackages.nvidia_x11}/lib:${stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libGL}/lib:${pkgs.libGLU}/lib:${pkgs.glibc}/lib:${pkgs.glib.out}/lib";
-    };
-
-  };
-
   ##### System packages #####
   environment.systemPackages = with pkgs; [
     linuxPackages.nvidia_x11
     cudatoolkit
     alacritty
-    configure-gtk
     wayland
     xdg-utils
     glib
     vim
-    remmina
-    unclutter
-    nitrogen
     tmux
-    pcmanfm
-    vlc
     docker-compose
     virt-manager
     libguestfs
@@ -259,7 +193,6 @@ in {
     lshw
     zsh
     oh-my-zsh
-    bat
     fzf
     fd
     python3
@@ -267,59 +200,24 @@ in {
     rbenv
     go
     jdk
-    ansible
     pulumi
-    brave
     bluez
-    blueberry
     git
-    stow
-    brightnessctl
-    flameshot
-    feh
-    neofetch
-    cava
-    nvtop
-    acpi
     wireguard-tools
-    htop
-    nodejs_18
-    ranger
-    nmap
-    uget
-    p7zip
-    zip
-    unzip
-    jq
     polkit_gnome
     openvpn
-    tshark
-    tcpdump
     zlib
     glib
-    sshpass
-    anki-bin
-    catppuccin-kvantum
     glibc
     file
-    btop
-    joplin-desktop
-    pavucontrol
-    rsbkb
-    google-chrome
     ffmpeg
-    parallel
-    ripgrep
-    nload
     wirelesstools
     udisks2
   ];
 
   ##### Extra #####
-  # Wayland options for brave
   programs.zsh.enable = true;
   qt.platformTheme = "qt5ct";
-  nixpkgs.config.permittedInsecurePackages = [ "electron-12.2.3" ];
 
   programs.mtr.enable = true;
   programs.gnupg.agent = {
@@ -360,6 +258,5 @@ in {
       "networkmanager"
       "network"
     ];
-    packages = with pkgs; [ firefox ];
   };
 }

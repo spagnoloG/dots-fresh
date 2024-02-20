@@ -33,37 +33,19 @@ in {
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-    dbus-sway-environment
-    R
     # Appearence
     dracula-theme
     gnome3.adwaita-icon-theme
     # Development
     dbeaver
-    #postman
     libreoffice
     zathura
     okular
     conda
     vscode
     joplin-desktop
-    # Tools
+    # Tools / File managenemt
+    sshpass
     gparted
     etcher
     transmission-gtk
@@ -73,6 +55,24 @@ in {
     reuse
     pandoc
     texlive.combined.scheme-full
+    remmina
+    pcmanfm
+    jq
+    feh
+    ranger
+    uget
+    stow
+    bat
+    # Statistics
+    btop
+    nvitop
+    cava
+    acpi
+    brightnessctl
+    neofetch
+    htop-vim
+    # Programming languages
+    ansible
     # Database connection tools
     mysql
     #mongodb .. install it using nix-shell as it build itself each time (time consuming)
@@ -87,10 +87,13 @@ in {
     mpv
     gimp
     imagemagick
+    vlc
+    blueberry # Bluetooth client (GUI)
     # Voice chat
     discord
     zoom-us
     slack
+    teams-for-linux
     # Shell extras
     starship
     lsd
@@ -103,12 +106,19 @@ in {
     exiftool
     fcrackzip
     ghidra-bin
+    tshark
+    tcpdump
+    gdb
+    gef
+    nmap
     # Format tools
     black
     nixfmt
-    # OBSS
+    # Maths 
+    R
     octaveFull
     # Sway
+    dbus-sway-environment
     swaylock
     swayidle
     wl-clipboard
@@ -127,6 +137,7 @@ in {
     rofi-bluetooth
     # Audo control
     pulsemixer
+    pavucontrol
     nextcloud-client
     # Mailing
     thunderbird-bin
@@ -135,34 +146,42 @@ in {
     xdg-desktop-portal-wlr
     grim
     flameshot
-    #(writeShellScriptBin "flameshot-sway" ''
-    #  export QT_STYLE_OVERRIDE=Fusion
-    #  export XDG_CURRENT_DESKTOP=sway
-    #  export XDG_SESSION_DESKTOP=sway
-    #  export QT_QPA_PLATFORM=wayland
-    #  exec ${flameshot}/bin/flameshot
-    #'')
-    # hacking tools
-    gdb
-    gef
     # Networking statistics
     nload
     # Disk usage
     ncdu
     # Compression
+    zip
+    unzip
     pigz
     p7zip
     parallel
     ddrescue
+    ripgrep
+    # Browsers
+    brave
+    firefox
+    google-chrome
     # colored output in terminal
     grc
+    # Fonts
+    fira-code
+    fira
+    cooper-hewitt
+    ibm-plex
+    jetbrains-mono
+    iosevka
+    spleen
+    fira-code-symbols
+    powerline-fonts
+    nerdfonts
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".config/nvim".source =
-      "${config.home.homeDirectory}/Documents/dots-fresh/home_dir/.config/nvim";
+    #".config/nvim".source =
+    #  "${config.home.homeDirectory}/Documents/dots-fresh/home_dir/.config/nvim";
     ".local/share/rofi/themes/catppuccin-mocha.rasi".source =
       "${config.home.homeDirectory}/Documents/dots-fresh/home_dir/.local/share/rofi/themes/catppuccin-mocha.rasi";
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
@@ -195,7 +214,6 @@ in {
     org.freedesktop.impl.portal.Screencast=wlr
     org.freedesktop.impl.portal.Screenshot=wlr
   '';
-    
 
   home.sessionVariables = { EDITOR = "nvim"; };
 
